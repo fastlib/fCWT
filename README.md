@@ -143,10 +143,11 @@ fCWT is distributed under Apache 2.0 license. For conditions of distribution and
 References
 ==========
 
-[1]     Rafat. Wavelib. https://github.com/rafat/wavelib. Accessed: 2020-04-22.
+[1]     Rafat. Wavelib. https://github.com/rafat/wavelib. Accessed: 2020-04-22.\\
 [2]     R. Carmona, W.-L. Hwang, and B. Torresani.Practical Time-Frequency Analysis:  Gabor and wavelettransforms, with an implementation in S. Academic Press, 1998. [p1, 7, 10]
 
 [CMake]: https://cmake.org/
 [GCC]: https://gcc.gnu.org/
 [OpenMP]: https://www.openmp.org/
+[FFTW]: https://www.fftw.org/
 [Visual_Studio]: https://www.visualstudio.com/
