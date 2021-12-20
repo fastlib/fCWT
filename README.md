@@ -1,3 +1,5 @@
+![](https://github.com/fastlib/fCWT/blob/main/githubart.png)
+
 The fast Continuous Wavelet Transform (fCWT)
 ====================================
 
@@ -7,7 +9,7 @@ Features
 ========
 
 - Calculating CWT 34-120x faster than all competitors
-- Does not deminish accuracy as it does not rely on wavelet estimation
+- Very high time-frequency resolution (i.e., it does not rely on wavelet estimation)
 - Real-time CWT for signals having sample frequencies of up to 200kHz
 - Easy MATLAB integration via compiled MEX-files
 - Easy extendable to other wavelet types
@@ -28,7 +30,7 @@ Dependencies
 ------------
 
 - [Cmake] >=3.10
-- C++17 compiler ([GCC] 7.3+ or [Microsoft Visual C++][Visual_Studio] 15.7+);
+- C++17 compiler ([GCC] 10+, [Clang] or [Microsoft Visual C++][Visual_Studio] 15.7+);
 - [FFTW] >=3.3  (is included in the zip-file)
 - [OpenMP] >=5
 
@@ -148,6 +150,7 @@ References
 
 [CMake]: https://cmake.org/
 [GCC]: https://gcc.gnu.org/
+[Clang]: https://clang.llvm.org/
 [OpenMP]: https://www.openmp.org/
 [FFTW]: https://www.fftw.org/
 [Visual_Studio]: https://www.visualstudio.com/
