@@ -1,3 +1,5 @@
+![](https://github.com/fastlib/fCWT/blob/main/githubart.png)
+
 The fast Continuous Wavelet Transform (fCWT)
 ====================================
 
