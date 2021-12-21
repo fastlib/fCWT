@@ -34,16 +34,15 @@ Dependencies
 - [FFTW] >=3.3  (is included in the zip-file)
 - [OpenMP] >=5
 
-fCWT has been tested on Mac OSX Mojave 10.14.5, Big Sur 11.6 and Windows 10
-The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9, 16 GB 2400 MHz DDR4.
-No specific hardware is needed.
+fCWT has been tested on Mac OSX Mojave 10.14.5, Big Sur 11.6 and Windows 10. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9, 16 GB 2400 MHz DDR4. 
 
 Build time settings
 -------------------
 
 Settings that may be specified at build time by using [CMake] variables are:
-  1. the flag to build Matlab MEX-files (default is off);
-  2. installation directories.
+  1. the flag to build a shared library instead of static (default is on);
+  2. the flag to build Matlab MEX-files (default is off);
+  3. installation directories.
 
 Details:
 
@@ -55,7 +54,7 @@ Details:
 |BUILD_MATLAB|On \| Off|Off|Off|
 |**Installation directories**||||
 |FCWT_MATLAB_DIR|*a path relative to `build`*|"../MATLAB"|"../MATLAB"|
-|CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles%\dmitigr_the_cpp_library"|
+|CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles%\fcwt"|
 |FCWT_CMAKE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"share/fcwt/cmake"|"cmake"|
 |FCWT_LIB_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"lib"|"lib"|
 |FCWT_INCLUDE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"include"|"include"|
