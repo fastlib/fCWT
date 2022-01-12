@@ -20,13 +20,6 @@ limitations under the License.
 #include "fcwt.h"
 
 namespace fcwt {
-
-inline std::string GetCurrentWorkingDir( void ) {
-    char buff[FILENAME_MAX];
-    getcwd( buff, FILENAME_MAX );
-    std::string current_working_dir(buff);
-    return current_working_dir;
-}
     
     int find2power(int n)
     {
@@ -82,11 +75,12 @@ inline std::string GetCurrentWorkingDir( void ) {
             
             __m128 qq = _mm_set_ps1(q);
             ind4 = _mm_mul_ps(step4,_mm_add_ps(qq,offset));
+            float find4[4]; _mm_store_ps(find4, ind4);
             
-            wav[0] = wav[1] = mother[(int)ind4[0]];
-            wav[2] = wav[3] = mother[(int)ind4[1]];
-            wav[4] = wav[5] = mother[(int)ind4[2]];
-            wav[6] = wav[7] = mother[(int)ind4[3]];
+            wav[0] = wav[1] = mother[(int)find4[0]];
+            wav[2] = wav[3] = mother[(int)find4[1]];
+            wav[4] = wav[5] = mother[(int)find4[2]];
+            wav[6] = wav[7] = mother[(int)find4[3]];
             
             O8[q4] = _mm256_mul_ps(I8[q4],tmp[0]);
         }

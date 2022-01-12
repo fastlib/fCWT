@@ -21,49 +21,27 @@ limitations under the License.
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string>
 #include <fstream>
 #include <regex>
 
 #include <iostream>
 
+#include <chrono>
 #include <thread>
 #include "libwavelib/wavelib.h"
 #include <fftw3.h>
 #ifdef _WIN32
     #include <windows.h>
 #else
+    #include <unistd.h>
     #include <pthread.h>
 #endif
-#include <complex.h>
 #include <immintrin.h>
-//
-//#include <TAxis.h>
-//#include <TGraph.h>
-//#include <TGraph2D.h>
-//#include <TH2F.h>
-//#include <TMultiGraph.h>
-//#include <TCanvas.h>
-//#include <TApplication.h>
-//#include <TStyle.h>
-//#include <TPad.h>
-//#include <TROOT.h>
-//#include <TColor.h>
-//#include <TFrame.h>
-//#include <TVirtualPad.h>
 
 using namespace std;
 
 #define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-
-//GLOBAL FUNCTIONS
-inline string GetCurrentWorkingDir( void ) {
-    char buff[FILENAME_MAX];
-    getcwd( buff, FILENAME_MAX );
-    std::string current_working_dir(buff);
-    return current_working_dir;
-}
 
 #include "fcwt.h"
 #include "rwave.h"

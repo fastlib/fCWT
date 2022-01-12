@@ -8,13 +8,6 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library?" ON)
 option(BUILD_MATLAB "Build MATLAB MEX-files" OFF)
 
-if(BUILD_SHARED_LIBS)
-    message("Building of shared library is enabled.")
-    add_definitions(-DFCWT_DLL_BUILDING)
-else()
-    message("Building of static library is enabled.")
-endif()
-
 if(NOT DEFINED CMAKE_BUILD_TYPE OR NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING
       "Build type: Debug Release RelWithDebInfo MinSizeRel." FORCE)
@@ -57,7 +50,15 @@ project(fCWT VERSION 1.0 DESCRIPTION "Highly optimized implementation of the Con
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-SET(CMAKE_CXX_FLAGS "-mavx2 -O3 -lm")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+if(UNIX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -O2 -lm")
+elseif(WIN32)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX2 /O2 /W1")
+endif()
 
 find_package(OpenMP REQUIRED)
 if (OPENMP_FOUND)
@@ -93,10 +94,13 @@ set(fcwt_library_target "fCWT")
 
 #library
 if(BUILD_SHARED_LIBS)
-    add_library(${fcwt_library_target} SHARED ${libraryheaders} ${librarysources})
+    message("Building of shared library is enabled.")
+    add_definitions(-DFCWT_LIBRARY_DLL_BUILDING)
 else()
-    add_library(${fcwt_library_target} STATIC ${libraryheaders} ${librarysources})
+    message("Building of static library is enabled.")
 endif()
+
+add_library(${fcwt_library_target} ${libraryheaders} ${librarysources})
 
 set_target_properties(${fcwt_library_target}
     PROPERTIES
@@ -107,9 +111,9 @@ set_target_properties(${fcwt_library_target}
 
 # add the executable
 add_executable(fCWT_example ${headers} ${sources}) 
-include_directories("./src/libwavelib")
-include_directories("./src/fftw")
-include_directories("./src/MEX")
+include_directories("${PROJECT_SOURCE_DIR}/src/libwavelib")
+include_directories("${PROJECT_SOURCE_DIR}/src/fftw")
+include_directories("${PROJECT_SOURCE_DIR}/src/MEX")
 
 find_library (
     FFTW
@@ -118,13 +122,15 @@ find_library (
     NO_DEFAULT_PATH # do not search system default paths
     REQUIRED
 )
-find_library (
-    FFTW_OMP
-    NAMES fftw3f_omp libfftw3f_omp # what to look for
-    HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
-    NO_DEFAULT_PATH # do not search system default paths
-    REQUIRED
-)
+if(UNIX)
+	find_library (
+		FFTW_OMP
+		NAMES fftw3f_omp libfftw3f_omp # what to look for
+		HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+		NO_DEFAULT_PATH # do not search system default paths
+		REQUIRED
+	)
+endif()
 find_library (
     WAVELIB
     NAMES wavelib libwavelib # what to look for
@@ -135,9 +141,11 @@ find_library (
 
 # check if we found the library
 message(${PROJECT_SOURCE_DIR})
-message(STATUS OF LIBRARY: "FFTW: [${FFTW}]")
-message(STATUS OF LIBRARY: "FFTW_OMP: [${FFTW_OMP}]")
-message(STATUS OF LIBRARY: "WAVELIB: [${WAVELIB}]")
+message("STATUS OF LIBRARY: FFTW: [${FFTW}]")
+if(UNIX)
+	message("STATUS OF LIBRARY: FFTW_OMP: [${FFTW_OMP}]")
+endif()
+message("STATUS OF LIBRARY: WAVELIB: [${WAVELIB}]")
 
 if(FFTW)
     target_link_libraries(fCWT_example PRIVATE ${FFTW})
@@ -146,18 +154,28 @@ else()
     message(SEND_ERROR "Did not find lib fftw3f")
 endif()
 
-if(FFTW_OMP)
-    target_link_libraries(fCWT_example PRIVATE ${FFTW_OMP})
-    target_link_libraries(${fcwt_library_target} PRIVATE ${FFTW_OMP})
-else()
-    message(SEND_ERROR "Did not find lib fftw3f_omp")
+if(UNIX)
+	if(FFTW_OMP)
+		target_link_libraries(fCWT_example PRIVATE ${FFTW_OMP})
+		target_link_libraries(${fcwt_library_target} PRIVATE ${FFTW_OMP})
+	else()
+		message(SEND_ERROR "Did not find lib fftw3f_omp")
+	endif()
 endif()
-
 
 if (NOT WAVELIB)
     message(SEND_ERROR "Did not find lib wavelib")
 else()
     target_link_libraries(fCWT_example PRIVATE ${WAVELIB})
+endif()
+
+if(WIN32)
+	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Release)
+	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Release)
+	file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Release)
 endif()
 
 

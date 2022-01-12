@@ -54,7 +54,7 @@ Details:
 |BUILD_MATLAB|On \| Off|Off|Off|
 |**Installation directories**||||
 |FCWT_MATLAB_DIR|*a path relative to `build`*|"../MATLAB"|"../MATLAB"|
-|CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles%\fcwt"|
+|CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles (x86)%\fCWT"|
 |FCWT_CMAKE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"share/fcwt/cmake"|"cmake"|
 |FCWT_LIB_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"lib"|"lib"|
 |FCWT_INCLUDE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"include"|"include"|
@@ -75,14 +75,15 @@ Installation on Microsoft Windows
 Run the Developer Command Prompt for Visual Studio and type:
 
     > git clone https://github.com/fastlib/fCWT.git
-    > mkdir build
+    > mkdir -p build
     > cd build
-    > cmake -G "Visual Studio 15 2017 Win64" ..
+    > cmake -G "Visual Studio 17 2022" ..
     > cmake --build .
 
-Next, run the Elevated Command Prompt (i.e. the command prompt with administrator privileges) and type:
+A Visual Studio .SLN file has now been created in the build-folder. This project includes several build targets. To build a shared/static library of fCWT, build the 'fCWT' target. To run the example code, set the 'fCWT_example' target as the start-up project and run the code as 'release'.
 
-    > cd build
+To install fCWT, run the Elevated Command Prompt (i.e. the command prompt with administrator privileges) in the build-folder and type:
+
     > cmake -P cmake_install.cmake
 
 To make the installed DLL available for *any* application that depends on it, the symbolic link to the
@@ -130,7 +131,7 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 MATLAB
 ---------
 
-In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. 
+In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the build option. For obvious reasons, generation of MEX-files is only possible if MATLAB is installed on your system. 
 
 Note: Expect a decrease in performance when using fCWT via MATLAB. The official benchmark tests MATLAB's CWT implementation via the MATLAB interface and fCWT via the command line. We advice to use fCWT's MATLAB interface solely for plotting purposes. 
 

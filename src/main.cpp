@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
     const int sigoutsize = size*noct*nvoi*2;
     float c0 = 2*PI;
     float hz = 1;
-    int runs = 10;
+    int runs = 5;
     
     float *sig1 = (float*)malloc(sizeof(float)*size);
     float *sig2 = (float*)malloc(sizeof(float)*size);
@@ -213,7 +213,8 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            usleep(10000000);
+            this_thread::sleep_for(chrono::microseconds(10000000));
+
         }
         cout << endl;
         cout << algorithm << " on sig1 with length N: " << size;
@@ -238,7 +239,7 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            usleep(10000000);
+            this_thread::sleep_for(chrono::microseconds(10000000));
         }
         cout << endl;
         cout << algorithm << " on sig2 with length N: " << size;
@@ -262,7 +263,8 @@ int main(int argc, char * argv[]) {
 
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
-            usleep(10000000);
+            
+            this_thread::sleep_for(chrono::microseconds(10000000));
         }
         cout << endl;
         cout << algorithm << " on sig3 with length N: " << size;
@@ -283,7 +285,7 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            usleep(1000000);
+            this_thread::sleep_for(chrono::microseconds(10000000));
         }
         cout << endl;
         cout << algorithm << " on sig1 with length N: " << size;
@@ -303,7 +305,7 @@ int main(int argc, char * argv[]) {
             times[k] = finish - start;
             cout << times[k].count();
             
-            usleep(1000000);
+            this_thread::sleep_for(chrono::microseconds(10000000));
         }
         cout << endl;
         cout << algorithm << " on sig1 with length N: " << size;
