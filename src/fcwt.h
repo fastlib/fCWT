@@ -36,6 +36,7 @@ limitations under the License.
 #include <stdlib.h>
 #include <cstring>
 #include <stdbool.h>
+#include <math.h>
 
 #include <iostream>
 #include <sstream>
