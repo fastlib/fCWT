@@ -60,6 +60,7 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 ```
+_Note: Compile with AVX and OpenMP._
 
 Installation
 ==========================
