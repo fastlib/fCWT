@@ -171,8 +171,9 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 
 MATLAB
 ---------
+You can also enjoy fCWT's extremely fast computation in Matlab using CMake's MEX build option. Unfortunately, MEX-files have to be generated as these files are system and Matlab-version dependent. In the MATLAB-folder you can find MEX-files generated for Mac OSX and Matlab r2020b. I will upload additional MEX-files for other systems and version soon.
 
-In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the build option. For obvious reasons, generation of MEX-files is only possible if MATLAB is installed on your system. 
+When you generated your MEX-files, you can run the example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. 
 
 Note: Expect a decrease in performance when using fCWT via MATLAB. The official benchmark tests MATLAB's CWT implementation via the MATLAB interface and fCWT via the command line. We advice to use fCWT's MATLAB interface solely for plotting purposes. 
 
