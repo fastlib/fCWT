@@ -220,15 +220,3 @@ install(TARGETS ${fcwt_library_target}
 install(EXPORT ${fcwt_library_target}_export
   DESTINATION ${FCWT_CMAKE_INSTALL_DIR}
   FILE ${fcwt_library_target}-config.cmake)
-
-# Uninstalling
-
-add_custom_target(uninstall)
-
-add_custom_command(TARGET uninstall PRE_BUILD
-  COMMAND cmake -E remove -f ${CMAKE_INSTALL_PREFIX}/${FCWT_CMAKE_INSTALL_DIR}/dmitigr_the_cpp_library*
-  COMMAND cmake -E remove -f ${CMAKE_INSTALL_PREFIX}/${FCWT_LIB_INSTALL_DIR}/dmitigr_the_cpp_library*
-  COMMAND cmake -E remove -f ${CMAKE_INSTALL_PREFIX}/${FCWT_LIB_INSTALL_DIR}/libdmitigr_the_cpp_library*
-  COMMAND cmake -E remove -f ${CMAKE_INSTALL_PREFIX}/${FCWT_INCLUDE_INSTALL_DIR}/dmitigr/the_cpp_library*
-  COMMAND cmake -E remove_directory ${CMAKE_INSTALL_PREFIX}/${FCWT_INCLUDE_INSTALL_DIR}/dmitigr/the_cpp_library
-  )
