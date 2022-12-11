@@ -60,7 +60,7 @@ namespace fcwt {
         int endpoint = (int)endpointf;
         int endpoint4 = endpoint>>2;
         
-        float wav[8];
+        alignas(32) float wav[8];
         __m256* O8 = (__m256*)output;
         __m256* I8 = (__m256*)input;
         __m256* tmp = (__m256*)&wav;
@@ -175,8 +175,10 @@ namespace fcwt {
         float* mother = (float*)calloc(newsize,sizeof(float));
 
         //Initialize intermediate result
-        Ihat = fftwf_alloc_complex(newsize);
-        O1 = fftwf_alloc_complex(newsize);
+        //For latter use of avx-instructions we need 32 byte alignment
+        Ihat = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
+        O1 = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
+
         
         //Copy input to new input buffer
         memcpy(input,Rinput,sizeof(float)*inputsize);
