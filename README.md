@@ -1,4 +1,4 @@
-![](https://github.com/fastlib/fCWT/blob/main/githubart.png)
+![](https://github.com/fastlib/fCWT-dev/blob/live/img/githubart.png)
 
 The fast Continuous Wavelet Transform (fCWT)
 ====================================
@@ -15,6 +15,8 @@ Features
 - Easy MATLAB integration via MEX-files
 
 *Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
+
+![](https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png)
 
 Quickstart 
 ============
@@ -46,12 +48,14 @@ See the Installation section for more details about building fCWT from source fo
 Benchmark
 ========
 
+Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies.
+
 | Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
 |-----------------------|---------|----------|----------|-----------|----------------|
 | fCWT (C++)            | 0.005s  | 0.04s    | 0.03s    | 0.32s     | -              |
 | fCWT (Python)         | 0.027s  | 0.23s    | 0.075s   | 0.57s     | -              | 
 | fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
-|-----------------------|---------|----------|----------|-----------|----------------|
+|                       |         |          |          |           |                |
 | CCWT (Python)         | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
 | PyWavelets (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
 | Matlab                | 0.75s   | 0.86s    | 1.06s    | 13.26s    | 35.85x         |
@@ -60,7 +64,6 @@ Benchmark
 | Rwave (C)             | 0.18s   | 1.84s    | 2.28s    | 23.22s    | 62.75x         |
 | Mathematica           | -       | -        | -        | 27.83s    | 75.20x         |
 | Wavelib (C++)         | 0.25s   | 2.55s    | 4.85s    | 45.04s    | 121.72x        |
-|:----------------------|:--------|:---------|:---------|:----------|:---------------|
 
 
 Python Example
@@ -74,7 +77,7 @@ import matplotlib.pyplot as plt
 #Initialize
 fs = 1000
 n = fs*100 #100 seconds
-ts = np.arange(n)/fs
+ts = np.arange(n)
 
 #Generate linear chirp
 signal = np.sin(2*np.pi*((1+(20*ts)/n)*(ts/fs)))
@@ -83,19 +86,15 @@ f0 = 1 #lowest frequency
 f1 = 101 #highest frequency
 fn = 200 #number of frequencies
 
-#Calculate CWT
-freqs, out = fcwt.fcwt(signal, fs, f0, f1, fn)
+#Calculate CWT without plotting...
+freqs, out = fcwt.cwt(signal, fs, f0, f1, fn)
 
-#Plot output
-plt.imshow(np.abs(out),aspect='auto',origin='lower')
-
-#Set frequencies on y-axis and time on x-axis
-plt.yticks(np.arange(0,fn,10),np.round(freqs[0:fn:10],2))
-plt.xticks(np.arange(0,n/fs,10),np.arange(0,n/fs,10))
-
-plt.show()
+#... or calculate and plot CWT
+fcwt.plot(signal, fs, f0=f0, f1=f1, fn=fn)
 ```
 
+Output:
+![](https://github.com/fastlib/fCWT-dev/blob/live/img/pythontest.png)
 
 C++ Example
 =======
