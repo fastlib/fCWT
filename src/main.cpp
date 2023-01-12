@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
     //input: n real numbers
     std::vector<float> sig(n);
     
-    //output: n x scales
+    //output: n x scales x 2 (complex numbers consist of two parts)
     std::vector<complex<float>> tfm(n*fn);
     
     //initialize with 1 Hz cosine wave
@@ -52,9 +52,13 @@ int main(int argc, char * argv[]) {
     //Create a wavelet object
     Wavelet *wavelet;
     
-    //Initialize a Morlet wavelet having sigma=2.0;
-    Morlet morl(2.0f);
+    //Initialize a Morlet wavelet having sigma=1.0;
+    Morlet morl(1.0f);
     wavelet = &morl;
+
+    //Other wavelets are also possible
+    //DOG dog(int order); 
+    //Paul paul(int order);
 
     //Create the continuous wavelet transform object
     //constructor(wavelet, nthreads, optplan)
@@ -70,7 +74,7 @@ int main(int argc, char * argv[]) {
     //
     //Arguments
     //wavelet   - pointer to wavelet object
-    //dist      - FCWT_LOGSCALES | FCWT_LINFREQS for logarithmic or linear distribution frequency range
+    //dist      - FCWT_LOGSCALES | FCWT_LINSCALES for logarithmic or linear distribution of scales across frequency range
     //fs        - sample frequency
     //f0        - beginning of frequency range
     //f1        - end of frequency range
@@ -92,11 +96,6 @@ int main(int argc, char * argv[]) {
 
     //Calculate total duration
     chrono::duration<double> elapsed = finish - start;
-    
-    cout << "=== fCWT example ===" << endl;
-    cout << "Calculate CWT of a 100k sample sinusodial signal using a [1-32] Hz logarithmic frequency range and 3000 wavelets." << endl;
-    cout << "====================" << endl;
-    cout << "fCWT finished in " << elapsed.count() << "s" << endl;
 
     return 0;
 }

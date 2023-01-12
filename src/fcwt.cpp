@@ -193,6 +193,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         int batchsize = (endpoint4/athreads);
         int s4 = (isize>>2)-1;
 
+
         #pragma omp parallel for
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
@@ -418,7 +419,7 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
         Ihat = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
         O1 = (fftwf_complex*)aligned_alloc(32, newsize*sizeof(fftwf_complex));
     #endif
-    
+
     //Copy input to new input buffer
     memcpy(input,pinput,sizeof(float)*size);
     memset(Ihat,0,sizeof(fftwf_complex)*newsize);

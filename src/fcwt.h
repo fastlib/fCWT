@@ -16,8 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#ifndef FCWT_H
-#define FCWT_H
+#pragma once
 
 #ifdef _WIN32
   #ifdef FCWT_LIBRARY_DLL_BUILDING
@@ -37,11 +36,7 @@ limitations under the License.
 #include <stdlib.h>
 #include <cstring>
 #include <stdbool.h>
-#include <vector>
-#include <chrono>
-#include <cassert>
 #include <math.h>
-#include <complex>
 
 #include <iostream>
 #include <sstream>
@@ -53,6 +48,7 @@ limitations under the License.
 #endif
 #include <fftw3.h>
 #include <memory>
+<<<<<<< HEAD
 //check if avx is supported and include the header
 #if defined(__AVX__)
     #include <immintrin.h>
@@ -102,15 +98,22 @@ private:
 class Scales {
 public:
     FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
+=======
+#include <immintrin.h>
 
-    void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
-    void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
+#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
+>>>>>>> parent of fe242c7 (fCWT 2.0 initial commit)
 
-    float* scales;
-    int fs;
-    float fourwavl;
-    int nscales;
+namespace fcwt {
 
+    void precalculate_morlet(float* mother, float cf, int isize);
+    void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float *mother, float scale, int isize);
+    void FCWT_LIBRARY_API create_optimization_schemes(int maxsize, int threads, int optimizationflags);
+    void load_optimization_schemes(bool use_optimalization_schemes, int size, int nthread);
+    void main(float *Rinput,float *Routput,int *stboctave, int *endoctave, int *pnbvoice, int *pinputsize, float *pcenterfrequency, int nthreads, bool use_optimalization_schemes);
+    void FCWT_LIBRARY_API cwt(float *input, int inputsize, float* output, int stboctave, int endoctave, int pnbvoice, float c0, int threads, bool use_optimalization_schemes);
+
+<<<<<<< HEAD
 private:
     void calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn);
     void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
@@ -169,16 +172,6 @@ inline int find2power(int n)
         m2 <<= 1; /* m2 = m2*2 */
     }
     return(m);
+=======
+>>>>>>> parent of fe242c7 (fCWT 2.0 initial commit)
 }
-
-inline double factorial(int N) {
-    static const double fact[41] = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000, 51090942171709440000.0, 1124000727777607680000.0, 25852016738884976640000.0, 620448401733239439360000.0, 15511210043330985984000000.0, 403291461126605635584000000.0, 10888869450418352160768000000.0, 304888344611713860501504000000.0, 8841761993739701954543616000000.0, 265252859812191058636308480000000.0, 8222838654177922817725562880000000.0, 263130836933693530167218012160000000.0, 8683317618811886495518194401280000000.0, 295232799039604140847618609643520000000.0, 10333147966386144929666651337523200000000.0, 371993326789901217467999448150835200000000.0, 13763753091226345046315979581580902400000000.0, 523022617466601111760007224100074291200000000.0, 20397882081197443358640281739902897356800000000.0, 815915283247897734345611269596115894272000000000.0 };
-    return fact[N];
-}
-
-inline float gamma_dog(int N) {
-    static const float gamma[11] = {0.751126, 1.0623, 0.8673, 0.5485, 0.2932, 0.1382, 0.0589, 0.0231, 0.0084, 0.0029, 0.0009};
-    return gamma[N];
-}
-
-#endif
