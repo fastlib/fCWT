@@ -29,7 +29,6 @@ limitations under the License.
 
 #include <chrono>
 #include <thread>
-#include "libwavelib/wavelib.h"
 #include <fftw3.h>
 #ifdef _WIN32
     #include <windows.h>
@@ -41,8 +40,4 @@ limitations under the License.
 
 using namespace std;
 
-#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-
 #include "fcwt.h"
-#include "rwave.h"
-#include "wavelib.h"
