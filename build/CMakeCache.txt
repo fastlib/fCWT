@@ -15,7 +15,7 @@
 ########################
 
 //Build Benchmark?
-BUILD_BENCHMARK:BOOL=ON
+BUILD_BENCHMARK:BOOL=OFF
 
 //Build shared library?
 BUILD_SHARED_LIBS:BOOL=ON
@@ -274,9 +274,6 @@ OpenMP_libomp_LIBRARY:FILEPATH=/usr/local/lib/libomp.dylib
 
 //Use own FFTW installation?
 USE_OWN_FFTW:BOOL=OFF
-
-//Path to a library.
-WAVELIB:FILEPATH=/usr/local/lib/libwavelib.a
 
 //Value Computed by CMake
 fCWT_BINARY_DIR:STATIC=/Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build

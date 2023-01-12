@@ -64,7 +64,6 @@ CMAKE_BINARY_DIR = /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build
 
 # The main recursive "all" target.
 all: CMakeFiles/fCWT.dir/all
-all: CMakeFiles/fCWT_benchmark.dir/all
 all: CMakeFiles/fCWT_example.dir/all
 .PHONY : all
 
@@ -74,7 +73,6 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/fCWT.dir/clean
-clean: CMakeFiles/fCWT_benchmark.dir/clean
 clean: CMakeFiles/fCWT_example.dir/clean
 .PHONY : clean
 
@@ -105,39 +103,13 @@ CMakeFiles/fCWT.dir/clean:
 .PHONY : CMakeFiles/fCWT.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/fCWT_benchmark.dir
-
-# All Build rule for target.
-CMakeFiles/fCWT_benchmark.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles --progress-num=3,4,5,6,7 "Built target fCWT_benchmark"
-.PHONY : CMakeFiles/fCWT_benchmark.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/fCWT_benchmark.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/fCWT_benchmark.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles 0
-.PHONY : CMakeFiles/fCWT_benchmark.dir/rule
-
-# Convenience name for target.
-fCWT_benchmark: CMakeFiles/fCWT_benchmark.dir/rule
-.PHONY : fCWT_benchmark
-
-# clean rule for target.
-CMakeFiles/fCWT_benchmark.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/clean
-.PHONY : CMakeFiles/fCWT_benchmark.dir/clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/fCWT_example.dir
 
 # All Build rule for target.
 CMakeFiles/fCWT_example.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles --progress-num=8,9,10 "Built target fCWT_example"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles --progress-num=3,4,5 "Built target fCWT_example"
 .PHONY : CMakeFiles/fCWT_example.dir/all
 
 # Build rule for subdir invocation for target.

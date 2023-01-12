@@ -175,19 +175,6 @@ fCWT/fast:
 .PHONY : fCWT/fast
 
 #=============================================================================
-# Target rules for targets named fCWT_benchmark
-
-# Build rule for target.
-fCWT_benchmark: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fCWT_benchmark
-.PHONY : fCWT_benchmark
-
-# fast build rule for target.
-fCWT_benchmark/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/build
-.PHONY : fCWT_benchmark/fast
-
-#=============================================================================
 # Target rules for targets named fCWT_example
 
 # Build rule for target.
@@ -200,37 +187,12 @@ fCWT_example/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/build
 .PHONY : fCWT_example/fast
 
-src/benchmark.o: src/benchmark.cpp.o
-.PHONY : src/benchmark.o
-
-# target to build an object file
-src/benchmark.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/benchmark.cpp.o
-.PHONY : src/benchmark.cpp.o
-
-src/benchmark.i: src/benchmark.cpp.i
-.PHONY : src/benchmark.i
-
-# target to preprocess a source file
-src/benchmark.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/benchmark.cpp.i
-.PHONY : src/benchmark.cpp.i
-
-src/benchmark.s: src/benchmark.cpp.s
-.PHONY : src/benchmark.s
-
-# target to generate assembly for a file
-src/benchmark.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/benchmark.cpp.s
-.PHONY : src/benchmark.cpp.s
-
 src/fcwt.o: src/fcwt.cpp.o
 .PHONY : src/fcwt.o
 
 # target to build an object file
 src/fcwt.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT.dir/build.make CMakeFiles/fCWT.dir/src/fcwt.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/fcwt.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/src/fcwt.cpp.o
 .PHONY : src/fcwt.cpp.o
 
@@ -240,7 +202,6 @@ src/fcwt.i: src/fcwt.cpp.i
 # target to preprocess a source file
 src/fcwt.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT.dir/build.make CMakeFiles/fCWT.dir/src/fcwt.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/fcwt.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/src/fcwt.cpp.i
 .PHONY : src/fcwt.cpp.i
 
@@ -250,7 +211,6 @@ src/fcwt.s: src/fcwt.cpp.s
 # target to generate assembly for a file
 src/fcwt.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT.dir/build.make CMakeFiles/fCWT.dir/src/fcwt.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/fcwt.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/src/fcwt.cpp.s
 .PHONY : src/fcwt.cpp.s
 
@@ -278,54 +238,6 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_example.dir/build.make CMakeFiles/fCWT_example.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/rwave-bench.o: src/rwave-bench.cpp.o
-.PHONY : src/rwave-bench.o
-
-# target to build an object file
-src/rwave-bench.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/rwave-bench.cpp.o
-.PHONY : src/rwave-bench.cpp.o
-
-src/rwave-bench.i: src/rwave-bench.cpp.i
-.PHONY : src/rwave-bench.i
-
-# target to preprocess a source file
-src/rwave-bench.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/rwave-bench.cpp.i
-.PHONY : src/rwave-bench.cpp.i
-
-src/rwave-bench.s: src/rwave-bench.cpp.s
-.PHONY : src/rwave-bench.s
-
-# target to generate assembly for a file
-src/rwave-bench.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/rwave-bench.cpp.s
-.PHONY : src/rwave-bench.cpp.s
-
-src/wavelib-bench.o: src/wavelib-bench.cpp.o
-.PHONY : src/wavelib-bench.o
-
-# target to build an object file
-src/wavelib-bench.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/wavelib-bench.cpp.o
-.PHONY : src/wavelib-bench.cpp.o
-
-src/wavelib-bench.i: src/wavelib-bench.cpp.i
-.PHONY : src/wavelib-bench.i
-
-# target to preprocess a source file
-src/wavelib-bench.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/wavelib-bench.cpp.i
-.PHONY : src/wavelib-bench.cpp.i
-
-src/wavelib-bench.s: src/wavelib-bench.cpp.s
-.PHONY : src/wavelib-bench.s
-
-# target to generate assembly for a file
-src/wavelib-bench.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/fCWT_benchmark.dir/build.make CMakeFiles/fCWT_benchmark.dir/src/wavelib-bench.cpp.s
-.PHONY : src/wavelib-bench.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -339,23 +251,13 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... fCWT"
-	@echo "... fCWT_benchmark"
 	@echo "... fCWT_example"
-	@echo "... src/benchmark.o"
-	@echo "... src/benchmark.i"
-	@echo "... src/benchmark.s"
 	@echo "... src/fcwt.o"
 	@echo "... src/fcwt.i"
 	@echo "... src/fcwt.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/rwave-bench.o"
-	@echo "... src/rwave-bench.i"
-	@echo "... src/rwave-bench.s"
-	@echo "... src/wavelib-bench.o"
-	@echo "... src/wavelib-bench.i"
-	@echo "... src/wavelib-bench.s"
 .PHONY : help
 
 

@@ -1,5 +1,4 @@
 /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles/fCWT.dir
-/Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles/fCWT_benchmark.dir
 /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles/fCWT_example.dir
 /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles/edit_cache.dir
 /Users/lukasarts/Dropbox/UU/FCWT/fCWT-dev/build/CMakeFiles/rebuild_cache.dir

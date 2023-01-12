@@ -130,6 +130,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/fCWT.dir/DependInfo.cmake"
-  "CMakeFiles/fCWT_benchmark.dir/DependInfo.cmake"
   "CMakeFiles/fCWT_example.dir/DependInfo.cmake"
   )

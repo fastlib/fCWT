@@ -197,7 +197,7 @@ Build time settings
 
 Settings that may be specified at build time by using [CMake] variables are:
   1. the flag to build a shared library instead of static (default is on);
-  2. whether or not you want to use your own FFTW installation that you obtained via `brew` or `apt-get`;
+  2. whether or not you want to use your own FFTW installation*;
   3. whether or not you want to build the `BENCHMARK` target;
   3. installation directories.
 
@@ -217,6 +217,8 @@ Details:
 |FCWT_CMAKE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"share/fcwt/cmake"|"cmake"|
 |FCWT_LIB_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"lib"|"lib"|
 |FCWT_INCLUDE_INSTALL_DIR|*a path relative to CMAKE_INSTALL_PREFIX*|"include"|"include"|
+
+* Please note that you'll need to configure FFTW to use OpenMP for multithreading and 256-bit vector instructions (e.g., AVX) to obtain comparable results to the benchmark. Standard configuration binaries obtained via `brew` or `apt-get` generally don't have AVX enabled. 
 
 Installation on Unix
 ---------------------
