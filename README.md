@@ -11,16 +11,17 @@ Features
 - Calculating CWT 34-120x faster than all competitors*
 - Very high time-frequency resolution (i.e., it does not rely on wavelet estimation)
 - Real-time CWT for signals having sample frequencies of up to 200kHz
+- Applicable in many applications ranging from audio and speech to engine vibration analysis
 - Easy Python integration via pip
 - Easy MATLAB integration via MEX-files
-
-*Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
 |<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png" alt="fcwtaudio" width="400"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png" alt="fcwteeg" width="400"/>|
 |**fCWT for real-time Electroencephalography (EEG) analysis**    |**fCWT for real-time engine diagnostics**                       |
 |<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png" alt="fcwteeg2" width="400"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png" alt="fcwtengine" width="400"/>|
+
+*Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
 Quickstart 
 ============
