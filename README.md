@@ -207,8 +207,8 @@ Details:
 |:-------------|:--------------|:--------------|:-----------------|
 |**The flag to build the shared library**||||
 |BUILD_SHARED_LIBS|On \| Off|On|On|
-|**The flag to use own FFTW installation* (e.g., via brew or apt-get)**||||
-|USE_OWN_FFTW|On \| Off|Off|Off|
+|**The flag to use own FFTW installation (e.g., via brew or apt-get)**||||
+|USE_OWN_FFTW *|On \| Off|Off|Off|
 |**The flag to build benchmark target**||||
 |BUILD_BENCHMARK|On \| Off|Off|Off|
 |**Installation directories**||||
