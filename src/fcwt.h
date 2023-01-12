@@ -57,6 +57,10 @@ limitations under the License.
 #if defined(__AVX__)
     #include <immintrin.h>
     #define AVX
+    union U256f {
+        __m256 v;
+        float a[8];
+    };
 #endif
 
 #define PI                    3.14159265358979323846264338f
@@ -66,11 +70,6 @@ limitations under the License.
 using namespace std;
 
 enum SCALETYPE {FCWT_LINSCALES,FCWT_LOGSCALES,FCWT_LINFREQS};
-
-union U256f {
-	__m256 v;
-	float a[8];
-};
 
 class Wavelet {
 public:
