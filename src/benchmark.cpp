@@ -123,9 +123,9 @@ int main(int argc, char * argv[]) {
     const int fs = 64;
     const int f0 = 1;
     const int f1 = 32;
-    const int fn = 300;
     const int noct = 6;
-    const int nvoi = 50;
+    const int nvoi = 500;
+    const int fn = noct*nvoi;
     const int sigoutsize = size*fn*2;
     float c0 = 2*PI;
     float hz = 1;
@@ -134,7 +134,7 @@ int main(int argc, char * argv[]) {
     float *sig1 = (float*)malloc(sizeof(float)*size);
     float *sig2 = (float*)malloc(sizeof(float)*size);
     float *sig3 = (float*)malloc(sizeof(float)*size);
-    float *sigout = (float*)malloc(sizeof(float)*sigoutsize);
+    std::vector<complex<float>> sigout(size*fn);
     
     double *sig1d = (double*)malloc(sizeof(double)*size);
     double *sig2d = (double*)malloc(sizeof(double)*size);
@@ -194,7 +194,7 @@ int main(int argc, char * argv[]) {
         Wavelet *wavelet;
         Morlet morl(1.0f);
         wavelet = &morl;
-        FCWT fcwt(wavelet, nthreads, true);
+        FCWT fcwt(wavelet, nthreads, true, false);
 
         fcwt.create_FFT_optimization_plan(size,opt);
         
@@ -214,9 +214,9 @@ int main(int argc, char * argv[]) {
 
         Wavelet *wavelet;
         Morlet morl(1.0f);
-        
+
         wavelet = &morl;
-        FCWT fcwt(wavelet, nthreads, true);
+        FCWT fcwt(wavelet, nthreads, true, false);
         Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);
         
         for(int k=0; k<runs; k++) {
@@ -224,7 +224,7 @@ int main(int argc, char * argv[]) {
             
             start = chrono::high_resolution_clock::now();
             
-            fcwt.cwt(sig1, size, sigout, &scs);
+            fcwt.cwt(sig1, size, &sigout[0], &scs);
             
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
@@ -250,7 +250,7 @@ int main(int argc, char * argv[]) {
             cout << ".";
             start = chrono::high_resolution_clock::now();
 
-            fcwt.cwt(sig2, size, sigout, &scs);
+            fcwt.cwt(sig2, size, &sigout[0], &scs);
 
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
@@ -275,7 +275,7 @@ int main(int argc, char * argv[]) {
             cout << ".";
             start = chrono::high_resolution_clock::now();
 
-            fcwt.cwt(sig3, size, sigout, &scs);
+            fcwt.cwt(sig3, size, &sigout[0], &scs);
 
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
@@ -315,7 +315,7 @@ int main(int argc, char * argv[]) {
             cout << ".";
             start = chrono::high_resolution_clock::now();
 
-            wavelib::cwt(sig1d, nvoi, noct, size);
+            cwt(sig1d, nvoi, noct, size);
 
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
@@ -334,7 +334,6 @@ int main(int argc, char * argv[]) {
     delete sig1d;
     delete sig2d;
     delete sig3d;
-    delete sigout;
     delete sigoutd;
     delete times;
     

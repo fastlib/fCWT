@@ -75,8 +75,8 @@ set(implementationheaders
 set(benchmarkheaders
     "./src/benchmark.h"
     "./src/fcwt.h"
-    "./src/rwave.h" 
-    "./src/wavelib.h"
+    "./src/rwave-bench.h" 
+    "./src/wavelib-bench.h"
 )
 
 set(librarysources 
@@ -88,8 +88,8 @@ set(implementationsources
 set(benchmarksources
     "./src/benchmark.cpp"
     "./src/fcwt.cpp"
-    "./src/rwave.cpp"
-    "./src/wavelib.cpp"
+    "./src/rwave-bench.cpp"
+    "./src/wavelib-bench.cpp"
 )
 
 set(headers ${libraryheaders} ${implementationheaders})

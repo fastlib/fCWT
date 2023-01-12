@@ -7,7 +7,7 @@
  *                 All right reserved                           *
  ***************************************************************/
 
-#include "main.h"
+#include "benchmark.h"
 
 namespace rwave {
     
