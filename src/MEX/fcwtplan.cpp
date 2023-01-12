@@ -76,5 +76,12 @@ void mexFunction(int nlhs, mxArray *plhs[],
     }
     
     mexPrintf("using N:%d and %d threads.",size,nthreads);
-    fcwt::create_FFT_optimization_plan(size,nthreads,method);
+
+    Wavelet *wavelet;
+    Morlet morl(c0);
+    wavelet = &morl;
+
+    FCWT fcwt(wavelet, nthreads, true, true);
+
+    fcwt.create_FFT_optimization_plan(size,method);
 }

@@ -59,6 +59,8 @@ mex src/MEX/fcwtmexplan.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfft
 ```
 You need to adjust the fftw3f library names depending on your system. See the `src/fftw` folder for the specific library names.
 
+See this [matlab example script](https://github.com/fastlib/fCWT-dev/blob/live/MATLAB/example.mlx) for documentation.
+
 C++
 ---
 Build fCWT from source:

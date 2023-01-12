@@ -25,8 +25,8 @@ limitations under the License.
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
-    if(nrhs != 6) {
-        mexErrMsgIdAndTxt("fCWT:nrhs","Six inputs required. (inputArray, c0, fs, f0, f1, fn)");
+    if(nrhs != 7) {
+        mexErrMsgIdAndTxt("fCWT:nrhs","Six inputs required. (inputArray, c0, fs, f0, f1, fn, nthreads)");
     }
     if(nlhs != 2) {
         mexErrMsgIdAndTxt("fCWT:nlhs","Two outputs are required. (time-frequency matrix, frequencies)");
@@ -71,9 +71,15 @@ void mexFunction(int nlhs, mxArray *plhs[],
         mexErrMsgIdAndTxt("fCWT:notScalar",
                         "Number of frequencies must be a scalar.");
     }
+    if( !mxIsDouble(prhs[6]) ||
+        mxIsComplex(prhs[6]) ||
+        mxGetNumberOfElements(prhs[6]) != 1 ) {
+        mexErrMsgIdAndTxt("fCWT:notScalar",
+                        "Number of threads must be a scalar.");
+    }
     
     float *inMatrix;       /* 1xN input matrix */
-    mwSize c0, fs, f0, f1, fn;
+    mwSize c0, fs, f0, f1, fn, nthreads;
     mwSize ncols;           /* size of matrix */
     
     inMatrix = mxGetSingles(prhs[0]);
@@ -84,6 +90,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     f0 = mxGetScalar(prhs[3]);
     f1 = mxGetScalar(prhs[4]);
     fn = mxGetScalar(prhs[5]);
+    nthreads = mxGetScalar(prhs[6]);
     
     mwSize dims[2] = {ncols,fn};
     
@@ -98,7 +105,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     Morlet morl(c0);
     wavelet = &morl;
 
-    FCWT fcwt(wavelet, 8, true, true);
+    FCWT fcwt(wavelet, nthreads, true, true);
     Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);
 
     scs.getScales(outScales, fn);
