@@ -41,16 +41,23 @@ Quickstart
 
 fCWT's implementation can be used to accelerate your C++, Matlab, and Python projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
 
+Python
+---
+
 Install the Python package using pip:
 ```
 pip install fcwt
 ```
 See this [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutorial.ipynb) for documentation.
 
+Matlab
+---
 Install the Matlab wrapper using the following MEX command:
 ```
 ```
 
+C++
+---
 Build fCWT from source:
 ```
 $ git clone https://github.com/fastlib/fCWT.git
