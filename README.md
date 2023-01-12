@@ -1,4 +1,4 @@
-![](https://github.com/fastlib/fCWT/blob/main/githubart.png)
+![](https://github.com/fastlib/fCWT/blob/main/img/githubart.png)
 
 UPDATE (12-01-2023)
 ===================
