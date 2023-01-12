@@ -319,7 +319,7 @@ If one wants to reproduce the benchmark results as stated in the article, one ha
 3. Run Wavelib with: `$ ./fCWT_example -wavelib 100000 8`,
 4. Run additional Python, Matlab and Mathematica scripts found in `/src/benchmark`
 
-By default, the source code performs 10 runs for demonstration purposes. To match the number of runs in the paper, adjust the `runs` variable in `main.cpp:128`. It is recommended to close any background processes. 
+By default, the source code performs 10 runs for demonstration purposes. To match the number of runs in the paper, adjust the `runs` variable in `benchmark.cpp:132`. It is recommended to close any background processes. 
 
 MATLAB
 ---------
