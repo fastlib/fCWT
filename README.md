@@ -1,4 +1,4 @@
-![](https://github.com/fastlib/fCWT-dev/blob/live/img/githubart.png)
+![](https://github.com/fastlib/fCWT/blob/main/githubart.png)
 
 UPDATE (12-01-2023)
 ===================
@@ -30,9 +30,9 @@ Features
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
-|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png" alt="fcwtaudio" width="400"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png" alt="fcwteeg" width="400"/>|
+|<img src="https://github.com/fastlib/fCWT/blob/main/img/audio.png" alt="fcwtaudio" width="400"/>|<img src="https://github.com/fastlib/fCWT/blob/main/img/eeg.png" alt="fcwteeg" width="400"/>|
 |**fCWT for real-time Electroencephalography (EEG) analysis**    |**fCWT for real-time engine diagnostics**                       |
-|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png" alt="fcwteeg2" width="400"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png" alt="fcwtengine" width="400"/>|
+|<img src="https://github.com/fastlib/fCWT/blob/main/img/eeg2.png" alt="fcwteeg2" width="400"/>|<img src="https://github.com/fastlib/fCWT/blob/main/img/engine.png" alt="fcwtengine" width="400"/>|
 
 *Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
@@ -48,7 +48,7 @@ Install the Python package using pip:
 ```
 pip install fcwt
 ```
-See this [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutorial.ipynb) for documentation.
+See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.ipynb) for documentation.
 
 Matlab
 ---
@@ -59,7 +59,7 @@ mex src/MEX/fcwtmexplan.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfft
 ```
 You need to adjust the fftw3f library names depending on your system. See the `src/fftw` folder for the specific library names.
 
-See this [matlab example script](https://github.com/fastlib/fCWT-dev/blob/live/MATLAB/example.mlx) for documentation.
+See this [matlab example script](https://github.com/fastlib/fCWT/blob/main/MATLAB/example.mlx) for documentation.
 
 C++
 ---
@@ -125,7 +125,7 @@ fcwt.plot(signal, fs, f0=f0, f1=f1, fn=fn)
 ```
 
 Output:
-![](https://github.com/fastlib/fCWT-dev/blob/live/img/pythontest.png)
+![](https://github.com/fastlib/fCWT/blob/main/img/pythontest.png)
 
 C++ Example
 =======
