@@ -6,7 +6,8 @@ endif()
 
 #Build options
 option(BUILD_SHARED_LIBS "Build shared library?" ON)
-option(BUILD_MATLAB "Build MATLAB MEX-files" OFF)
+option(USE_OWN_FFTW "Use own FFTW installation?" OFF)
+option(BUILD_BENCHMARK "Build Benchmark?" OFF)
 
 if(NOT DEFINED CMAKE_BUILD_TYPE OR NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -39,12 +40,8 @@ elseif(WIN32)
     STRING "Name of the installation directory for the includes relative to ${CMAKE_INSTALL_PREFIX}")
 endif()
 
-#Use gcc version 10. If your system has a different version, please change these two lines.
-set(CMAKE_C_COMPILER "gcc-10")
-set(CMAKE_CXX_COMPILER "g++-10")
-
 # set the project name
-project(fCWT VERSION 1.0 DESCRIPTION "Highly optimized implementation of the Continuous Wavelet Transform")
+project(fCWT VERSION 2.0 DESCRIPTION "Highly optimized implementation of the Continuous Wavelet Transform")
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -54,17 +51,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-if(UNIX)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -O2 -lm")
-elseif(WIN32)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX2 /O2 /W1")
-endif()
-
 find_package(OpenMP REQUIRED)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+
+if(UNIX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/local/include -L/usr/local/lib -Xpreprocessor -fopenmp -lomp -fPIC -mavx -O2 -lm")
+elseif(WIN32)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX /O2 /W1")
 endif()
 
 link_directories(${PROJECT_SOURCE_DIR})
@@ -119,34 +116,88 @@ set_target_properties(${fcwt_library_target}
 
 
 # add the executable
-add_executable(fCWT_example ${headers} ${sources}) 
+if(BUILD_BENCHMARK)
+    add_executable(fCWT_benchmark ${benchmarkheaders} ${benchmarksources}) 
+endif()
+
+add_executable(fCWT_example ${headers} ${sources})
 include_directories("${PROJECT_SOURCE_DIR}/src/libwavelib")
 include_directories("${PROJECT_SOURCE_DIR}/src/fftw")
 include_directories("${PROJECT_SOURCE_DIR}/src/MEX")
 
-find_library (
-    FFTW
-    NAMES fftw3f libfftw3f # what to look for
-    HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
-    NO_DEFAULT_PATH # do not search system default paths
-    REQUIRED
-)
-if(UNIX)
-	find_library (
-		FFTW_OMP
-		NAMES fftw3f_omp libfftw3f_omp # what to look for
-		HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
-		NO_DEFAULT_PATH # do not search system default paths
-		REQUIRED
-	)
+if(NOT USE_OWN_FFTW)
+    #check if we are on a arm64 mac
+    if(APPLE)
+        message("Building for OSX")
+        
+        find_library (
+            FFTW
+            NAMES fftw3fmac # what to look for
+            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            NO_DEFAULT_PATH # do not search system default paths
+            REQUIRED
+        )
+        find_library (
+            FFTW_OMP
+            NAMES fftw3f_ompmac # what to look for
+            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            NO_DEFAULT_PATH # do not search system default paths
+            REQUIRED
+        )
+
+    #check if we are on a linux machine
+    elseif(UNIX)
+        message("Building for Linux")
+        
+        find_library (
+            FFTW
+            NAMES fftw3fl # what to look for
+            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            NO_DEFAULT_PATH # do not search system default paths
+            REQUIRED
+        )
+        find_library (
+            FFTW_OMP
+            NAMES fftw3f_ompl # what to look for
+            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            NO_DEFAULT_PATH # do not search system default paths
+            REQUIRED
+        )
+
+    #check if we are on a windows machine
+    elseif(WIN32)
+        message("Building for Windows")
+        find_library (
+            FFTW
+            NAMES fftw3f # what to look for
+            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            NO_DEFAULT_PATH # do not search system default paths
+            REQUIRED
+        )
+    endif()
+else()
+    message("Building using own FFTW installation.")
+    find_library (
+        FFTW
+        NAMES fftw3f libfftw3f # what to look for
+        REQUIRED
+    )
+    if(UNIX)
+        find_library (
+            FFTW_OMP
+            NAMES fftw3f_omp libfftw3f_omp # what to look for
+            REQUIRED
+        )
+    endif()
 endif()
-find_library (
-    WAVELIB
-    NAMES wavelib libwavelib # what to look for
-    HINTS "${PROJECT_SOURCE_DIR}/src/libwavelib" # where to look
-    NO_DEFAULT_PATH # do not search system default paths
-    REQUIRED
-)
+
+if(BUILD_BENCHMARK)
+    find_library (
+        WAVELIB
+        NAMES wavelib libwavelib # what to look for
+        REQUIRED
+    )
+endif()
 
 # check if we found the library
 message(${PROJECT_SOURCE_DIR})
@@ -154,28 +205,38 @@ message("STATUS OF LIBRARY: FFTW: [${FFTW}]")
 if(UNIX)
 	message("STATUS OF LIBRARY: FFTW_OMP: [${FFTW_OMP}]")
 endif()
-message("STATUS OF LIBRARY: WAVELIB: [${WAVELIB}]")
+if(BUILD_BENCHMARK)
+    message("STATUS OF LIBRARY: WAVELIB: [${WAVELIB}]")
+endif()
 
 if(FFTW)
     target_link_libraries(fCWT_example PRIVATE ${FFTW})
+    if(BUILD_BENCHMARK)
+        target_link_libraries(fCWT_benchmark PRIVATE ${FFTW})
+    endif()
     target_link_libraries(${fcwt_library_target} PRIVATE ${FFTW})
 else()
-    message(SEND_ERROR "Did not find lib fftw3f")
+    message(SEND_ERROR "Did not find fftw3f (float version of FFTW). If you want to use your own FFTW installation, please set USE_OWN_FFTW to ON.")
 endif()
 
 if(UNIX)
 	if(FFTW_OMP)
 		target_link_libraries(fCWT_example PRIVATE ${FFTW_OMP})
+        if(BUILD_BENCHMARK)
+		    target_link_libraries(fCWT_benchmark PRIVATE ${FFTW_OMP})
+        endif()
 		target_link_libraries(${fcwt_library_target} PRIVATE ${FFTW_OMP})
 	else()
-		message(SEND_ERROR "Did not find lib fftw3f_omp")
+        message(SEND_ERROR "Did not find fftw3f_omp (float and multithreaded omp version of FFTW). If you want to use your own FFTW installation, please set USE_OWN_FFTW to ON.")
 	endif()
 endif()
 
-if (NOT WAVELIB)
-    message(SEND_ERROR "Did not find lib wavelib")
-else()
-    target_link_libraries(fCWT_example PRIVATE ${WAVELIB})
+if(BUILD_BENCHMARK)
+    if (NOT WAVELIB)
+        message(SEND_ERROR "Did not find wavelib. Please note that you need to install wavelib yourself. See README.md for more information.")
+    else()
+        target_link_libraries(fCWT_benchmark PRIVATE ${WAVELIB})
+    endif()
 endif()
 
 if(WIN32)
@@ -183,34 +244,10 @@ if(WIN32)
 	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
 	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Release)
 	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Release)
-	file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
-	file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Release)
-endif()
-
-
-if(BUILD_MATLAB)
-    set(MATLAB_FIND_DEBUG)
-    
-    #Add MATLAB 2021a as possible export
-    set(MATLAB_ADDITIONAL_VERSIONS "R2021a=9.10")
-    
-    find_package(Matlab)
-    
-    matlab_add_mex(
-        NAME fCWTmex
-        SRC src/MEX/fcwtmex.cpp src/fcwt.h src/fcwt.cpp
-        OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT
-        LINK_TO ${FFTW} ${FFTW_OMP}
-        R2018a
-    )
-    
-    matlab_add_mex(
-        NAME fCWTmexplan
-        SRC src/MEX/fcwtplan.cpp src/fcwt.h src/fcwt.cpp
-        OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
-        LINK_TO ${FFTW} ${FFTW_OMP}
-        R2018a
-    )
+    if(BUILD_BENCHMARK)
+	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Release)
+    endif()
 endif()
 
 

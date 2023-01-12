@@ -16,7 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#pragma once
+#ifndef FCWT_H
+#define FCWT_H
 
 #ifdef _WIN32
   #ifdef FCWT_LIBRARY_DLL_BUILDING
@@ -36,7 +37,11 @@ limitations under the License.
 #include <stdlib.h>
 #include <cstring>
 #include <stdbool.h>
+#include <vector>
+#include <chrono>
+#include <cassert>
 #include <math.h>
+#include <complex>
 
 #include <iostream>
 #include <sstream>
@@ -48,16 +53,10 @@ limitations under the License.
 #endif
 #include <fftw3.h>
 #include <memory>
-<<<<<<< HEAD
 //check if avx is supported and include the header
 #if defined(__AVX__)
     #include <immintrin.h>
     #define AVX
-
-    union U256f {
-        __m256 v;
-        float a[8];
-    };
 #endif
 
 #define PI                    3.14159265358979323846264338f
@@ -67,6 +66,11 @@ limitations under the License.
 using namespace std;
 
 enum SCALETYPE {FCWT_LINSCALES,FCWT_LOGSCALES,FCWT_LINFREQS};
+
+union U256f {
+	__m256 v;
+	float a[8];
+};
 
 class Wavelet {
 public:
@@ -98,22 +102,15 @@ private:
 class Scales {
 public:
     FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
-=======
-#include <immintrin.h>
 
-#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
->>>>>>> parent of fe242c7 (fCWT 2.0 initial commit)
+    void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
+    void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
 
-namespace fcwt {
+    float* scales;
+    int fs;
+    float fourwavl;
+    int nscales;
 
-    void precalculate_morlet(float* mother, float cf, int isize);
-    void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float *mother, float scale, int isize);
-    void FCWT_LIBRARY_API create_optimization_schemes(int maxsize, int threads, int optimizationflags);
-    void load_optimization_schemes(bool use_optimalization_schemes, int size, int nthread);
-    void main(float *Rinput,float *Routput,int *stboctave, int *endoctave, int *pnbvoice, int *pinputsize, float *pcenterfrequency, int nthreads, bool use_optimalization_schemes);
-    void FCWT_LIBRARY_API cwt(float *input, int inputsize, float* output, int stboctave, int endoctave, int pnbvoice, float c0, int threads, bool use_optimalization_schemes);
-
-<<<<<<< HEAD
 private:
     void calculate_logscale_array(float base, float four_wavl, int fs, float f0, float f1, int fn);
     void calculate_linscale_array(float four_wavl, int fs, float f0, float f1, int fn);
@@ -130,8 +127,6 @@ public:
 
     void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales);
-
-    //Used in Python package
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>** poutput, int* pnoutput);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pnoutput);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
@@ -172,6 +167,6 @@ inline int find2power(int n)
         m2 <<= 1; /* m2 = m2*2 */
     }
     return(m);
-=======
->>>>>>> parent of fe242c7 (fCWT 2.0 initial commit)
 }
+
+#endif

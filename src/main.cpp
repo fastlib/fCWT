@@ -96,6 +96,11 @@ int main(int argc, char * argv[]) {
 
     //Calculate total duration
     chrono::duration<double> elapsed = finish - start;
+    
+    cout << "=== fCWT example ===" << endl;
+    cout << "Calculate CWT of a 100k sample sinusodial signal using a [1-32] Hz logarithmic frequency range and 3000 wavelets." << endl;
+    cout << "====================" << endl;
+    cout << "fCWT finished in " << elapsed.count() << "s" << endl;
 
     return 0;
 }
