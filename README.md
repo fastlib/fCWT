@@ -18,9 +18,9 @@ Features
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png)|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png) |
+|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png" alt="fcwtaudio" width="50%"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png" alt="fcwteeg" width="50%"/>|
 |fCWT for real-time Electroencephalography (EEG) analysis        |fCWT for real-time engine diagnostics                            |
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png) |![](https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png)|
+|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png" alt="fcwteeg2" width="50%"/>|<img src="https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png" alt="fcwtengine" width="50%"/>|
 
 Quickstart 
 ============
