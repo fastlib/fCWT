@@ -324,7 +324,7 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 MATLAB
 ---------
 
-In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the build option. For obvious reasons, generation of MEX-files is only possible if MATLAB is installed on your system. 
+In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the commands listed in the `quickstart` section.
 
 Note: Expect a decrease in performance when using fCWT via MATLAB. The official benchmark tests MATLAB's CWT implementation via the MATLAB interface and fCWT via the command line. We advice to use fCWT's MATLAB interface solely for plotting purposes. 
 
