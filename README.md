@@ -53,7 +53,7 @@ See the Installation section for more details about building fCWT from source fo
 Benchmark
 ========
 
-Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies.
+Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9 4.5 Ghz Boost, 16 GB 2400 MHz DDR4.
 
 | Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
 |-----------------------|---------|----------|----------|-----------|----------------|
