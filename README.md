@@ -4,7 +4,7 @@ UPDATE (12-01-2023)
 ===================
 
 New version available:
-- fCWT can be seamlessly used in Python!
+- fCWT can be seamlessly used in Python (see [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutorial.ipynb))
 - Interface upgrade: Use frequencies instead of scales and octaves!
 - Fixed small memory allignment bugs
 
@@ -45,6 +45,7 @@ Install the Python package using pip:
 ```
 pip install fcwt
 ```
+See this [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutorial.ipynb) for documentation.
 
 Install the Matlab wrapper using the following MEX command:
 ```
