@@ -4,7 +4,7 @@ UPDATE (12-01-2023)
 ===================
 
 New version available:
-- fCWT can be seamlessly used in Python (see [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutorial.ipynb))
+- fCWT can be seamlessly used in Python (see [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.ipynb))
 - Interface upgrade: Use frequencies instead of scales and octaves!
 - Fixed small memory allignment bugs
 
