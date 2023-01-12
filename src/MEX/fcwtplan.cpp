@@ -76,5 +76,5 @@ void mexFunction(int nlhs, mxArray *plhs[],
     }
     
     mexPrintf("using N:%d and %d threads.",size,nthreads);
-    fcwt::create_optimization_schemes(size,nthreads,method);
+    fcwt::create_FFT_optimization_plan(size,nthreads,method);
 }

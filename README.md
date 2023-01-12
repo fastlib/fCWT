@@ -52,8 +52,10 @@ See this [Jupyter Notebook](https://github.com/fastlib/fCWT-dev/blob/live/tutori
 
 Matlab
 ---
-Install the Matlab wrapper using the following MEX command:
+Compile the MEX wrappers for the fCWT functions using the following MEX commands:
 ```
+mex src/MEX/fcwtmex.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfftw3f_ompmac -lomp -R2018a
+mex src/MEX/fcwtmexplan.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfftw3f_ompmac -lomp -R2018a
 ```
 
 C++

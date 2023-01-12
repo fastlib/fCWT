@@ -21,14 +21,12 @@ limitations under the License.
 #include "matrix.h"
 #include "../fcwt.h"
 
-#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-
 //The gateway function
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
     if(nrhs != 6) {
-        mexErrMsgIdAndTxt("fCWT:nrhs","Six inputs required. (inputArray, c0, fs, s0, s1, Octave resolution)");
+        mexErrMsgIdAndTxt("fCWT:nrhs","Six inputs required. (inputArray, c0, fs, f0, f1, fn)");
     }
     if(nlhs != 2) {
         mexErrMsgIdAndTxt("fCWT:nlhs","Two outputs are required. (time-frequency matrix, frequencies)");
@@ -59,59 +57,52 @@ void mexFunction(int nlhs, mxArray *plhs[],
         mxIsComplex(prhs[3]) ||
         mxGetNumberOfElements(prhs[3]) != 1 ) {
         mexErrMsgIdAndTxt("fCWT:notScalar",
-                        "Starting octave must be a scalar.");
+                        "Starting frequency must be a scalar.");
     }
     if( !mxIsDouble(prhs[4]) ||
         mxIsComplex(prhs[4]) ||
         mxGetNumberOfElements(prhs[4]) != 1 ) {
         mexErrMsgIdAndTxt("fCWT:notScalar",
-                        "Ending octave must be a scalar.");
+                        "Ending frequency must be a scalar.");
     }
     if( !mxIsDouble(prhs[5]) ||
         mxIsComplex(prhs[5]) ||
         mxGetNumberOfElements(prhs[5]) != 1 ) {
         mexErrMsgIdAndTxt("fCWT:notScalar",
-                        "Octave resolution must be a scalar.");
+                        "Number of frequencies must be a scalar.");
     }
     
     float *inMatrix;       /* 1xN input matrix */
-    mwSize c0, fs, s0, s1, res;
-    mwSize ncols, nvoi;           /* size of matrix */
+    mwSize c0, fs, f0, f1, fn;
+    mwSize ncols;           /* size of matrix */
     
     inMatrix = mxGetSingles(prhs[0]);
     ncols = mxGetN(prhs[0]);
 
     c0 = mxGetScalar(prhs[1]);
     fs = mxGetScalar(prhs[2]);
-    s0 = mxGetScalar(prhs[3]);
-    s1 = mxGetScalar(prhs[4]);
-    nvoi = mxGetScalar(prhs[5]);
+    f0 = mxGetScalar(prhs[3]);
+    f1 = mxGetScalar(prhs[4]);
+    fn = mxGetScalar(prhs[5]);
     
-    if(pow(2,s1) > ncols) {
-        mexErrMsgIdAndTxt("fCWT:length",
-                        "Ending octave measures wavelenghts longer than the window size...");
-    }
-    
-    mwSize noct = s1-s0+1;
-    mwSize dims[2] = {ncols,noct*nvoi};
+    mwSize dims[2] = {ncols,fn};
     
     plhs[0] = mxCreateNumericArray(2,dims, mxSINGLE_CLASS, mxCOMPLEX);
-    float* outMatrixf = (float*)mxGetComplexSingles(plhs[0]);
+    complex<float>* outMatrixf = (complex<float>*)mxGetComplexSingles(plhs[0]);
     
-    mwSize dimsscale[2] = {1,noct*nvoi};
+    mwSize dimsscale[2] = {1,fn};
     plhs[1] = mxCreateNumericArray(2,dimsscale,mxSINGLE_CLASS, mxREAL);
     float* outScales = (float*)mxGetSingles(plhs[1]);
     
-    float abase;
-    int ind = 0;
-    for(int i = s0; i <= s1; i++) {
-        abase = 1 << i;
-        for(int j=0; j < nvoi; j++) {
-            outScales[ind] = fs/(abase*(pow(2.0,(float)(j)/((float)nvoi))));
-            ind++;
-        }
-    }
+    Wavelet *wavelet;
+    Morlet morl(c0);
+    wavelet = &morl;
 
-    fcwt::cwt(inMatrix, ncols, outMatrixf, (int)s0, (int)s1, (int)nvoi, (float)c0, 8, true);
+    FCWT fcwt(wavelet, 8, true, true);
+    Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);
+
+    scs.getScales(outScales, fn);
+
+    fcwt.cwt(inMatrix, ncols, outMatrixf, &scs);
 }
 
