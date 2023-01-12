@@ -187,7 +187,7 @@ Dependencies
 
 - [Cmake] >=3.10
 - C++17 compiler ([GCC] 10+, [Clang] or [Microsoft Visual C++][Visual_Studio] 15.7+);
-- [FFTW] >=3.3  (is included in the zip-file)
+- [FFTW] >=3.3  (if you choose to use own FFTW installation)
 - [OpenMP] >=5
 
 fCWT has been tested on Mac OSX Mojave 10.14.5, Big Sur 11.6 (both on Intel and Apple Silicon), Windows 10, and Ubutnu 20.04. Please raise an issue if you experience issues running fCWT on these systems! We are working very hard on getting fCWT to run on as many platforms as possible. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9, 16 GB 2400 MHz DDR4.
@@ -197,7 +197,8 @@ Build time settings
 
 Settings that may be specified at build time by using [CMake] variables are:
   1. the flag to build a shared library instead of static (default is on);
-  2. the flag to build Matlab MEX-files (default is off);
+  2. whether or not you want to use your own FFTW installation that you obtained via `brew` or `apt-get`;
+  3. whether or not you want to build the `BENCHMARK` target;
   3. installation directories.
 
 Details:
