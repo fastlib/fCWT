@@ -99,33 +99,33 @@ private:
     float ifb, fb2;
 };
 
-class DOG : public Wavelet {
-public:
-    FCWT_LIBRARY_API DOG(int order);
-    ~DOG() { free(mother); };
+// class DOG : public Wavelet {
+// public:
+//     FCWT_LIBRARY_API DOG(int order);
+//     ~DOG() { free(mother); };
     
-    void generate(int size); //frequency domain
-    void generate(float* real, float* imag, int size, float scale); //time domain
-    int getSupport(float scale) { return (int)(fb*scale*3.0f+1); };
-    int order;
+//     void generate(int size); //frequency domain
+//     void generate(float* real, float* imag, int size, float scale); //time domain
+//     int getSupport(float scale) { return (int)(fb*scale*3.0f+1); };
+//     int order;
     
-private:
-    float fb, ifb, fb2;
-};
+// private:
+//     float fb, ifb, fb2;
+// };
 
-class Paul : public Wavelet {
-public:
-    FCWT_LIBRARY_API Paul(int porder);
-    ~Paul() { free(mother); };
+// class Paul : public Wavelet {
+// public:
+//     FCWT_LIBRARY_API Paul(int porder);
+//     ~Paul() { free(mother); };
     
-    void generate(int size); //frequency domain
-    void generate(float* real, float* imag, int size, float scale); //time domain
-    int getSupport(float scale) { return (int)(fb*scale*fmax(3.0,(6.0-order*1.0))); };
-    int order;
+//     void generate(int size); //frequency domain
+//     void generate(float* real, float* imag, int size, float scale); //time domain
+//     int getSupport(float scale) { return (int)(fb*scale*fmax(3.0,(6.0-order*1.0))); };
+//     int order;
     
-private:
-    float fb;
-};
+// private:
+//     float fb;
+// };
 
 class Scales {
 public:
