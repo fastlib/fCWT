@@ -16,15 +16,11 @@ Features
 
 *Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
-|fCWT for real-time audio and speech analysis                    |
-|:--------------------------------------------------------------:|
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png)|
-|fCWT for high-resolution in-vivo Neuropixel data analysis       | 
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png) |
-|fCWT for real-time Electroencephalography (EEG) analysis        |
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png)  |
-|fCWT for real-time engine diagnostics                            |
-|![](https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png)|
+|fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
+|:--------------------------------------------------------------:|:--------------------------------------------------------------:|
+|![](https://github.com/fastlib/fCWT-dev/blob/live/img/audio.png)|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg.png) |
+|fCWT for real-time Electroencephalography (EEG) analysis        |fCWT for real-time engine diagnostics                            |
+|![](https://github.com/fastlib/fCWT-dev/blob/live/img/eeg2.png) |![](https://github.com/fastlib/fCWT-dev/blob/live/img/engine.png)|
 
 Quickstart 
 ============
