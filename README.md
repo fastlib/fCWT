@@ -3,24 +3,101 @@
 The fast Continuous Wavelet Transform (fCWT)
 ====================================
 
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT. 
-
-
----
-**fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
-
-> Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. _Nat Comput Sci_ **2**, 47–58 (2022). https://doi.org/10.1038/s43588-021-00183-z
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT.
 
 Features
 ========
 
-- Calculating CWT 34-120x faster than all competitors
+- Calculating CWT 34-120x faster than all competitors*
 - Very high time-frequency resolution (i.e., it does not rely on wavelet estimation)
 - Real-time CWT for signals having sample frequencies of up to 200kHz
-- Easy MATLAB integration via compiled MEX-files
-- Easy extendable to other wavelet types
+- Easy Python integration via pip
+- Easy MATLAB integration via MEX-files
 
-Example
+*Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
+
+Quickstart 
+============
+
+fCWT's implementation can be used to accelerate your C++, Matlab, and Python projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
+
+Install the Python package using pip:
+```
+pip install fcwt
+```
+
+Install the Matlab wrapper using the following MEX command:
+```
+```
+
+Build fCWT from source:
+```
+$ git clone https://github.com/fastlib/fCWT.git
+$ cd fCWT
+$ mkdir -p build
+$ cd build
+$ cmake ../
+$ make 
+$ sudo make install
+```
+See the Installation section for more details about building fCWT from source for both UNIX and Windows systems.
+
+
+Benchmark
+========
+
+| Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
+|:----------------------|:--------|:---------|:---------|:----------|:---------------|
+| fCWT (C++)            | 0.005s  | 0.04s    | 0.03s    | 0.32s     | -              |
+| fCWT (Python)         | 0.027s  | 0.23s    | 0.075s   | 0.57s     | -              | 
+| fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
+|:----------------------|:--------|:---------|:---------|:----------|:---------------|
+| CCWT (Python)         | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
+| PyWavelets (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
+| Matlab                | 0.75s   | 0.86s    | 1.06s    | 13.26s    | 35.85x         |
+| SsqueezePy (Python)   | 0.04s   | 0.43s    | 1.16s    | 17.76s    | 48.00x         |
+| SciPy (Python)        | 0.19s   | 1.82s    | 2.11s    | 18.70s    | 50.54x         |
+| Rwave (C)             | 0.18s   | 1.84s    | 2.28s    | 23.22s    | 62.75x         |
+| Mathematica           | -       | -        | -        | 27.83s    | 75.20x         |
+| Wavelib (C++)         | 0.25s   | 2.55s    | 4.85s    | 45.04s    | 121.72x        |
+|:----------------------|:--------|:---------|:---------|:----------|:---------------|
+
+
+Python Example
+==============
+
+```Python
+import fcwt
+import numpy as np
+import matplotlib.pyplot as plt
+
+#Initialize
+fs = 1000
+n = fs*100 #100 seconds
+ts = np.arange(n)/fs
+
+#Generate linear chirp
+signal = np.sin(2*np.pi*((1+(20*ts)/n)*(ts/fs)))
+
+f0 = 1 #lowest frequency
+f1 = 101 #highest frequency
+fn = 200 #number of frequencies
+
+#Calculate CWT
+freqs, out = fcwt.fcwt(signal, fs, f0, f1, fn)
+
+#Plot output
+plt.imshow(np.abs(out),aspect='auto',origin='lower')
+
+#Set frequencies on y-axis and time on x-axis
+plt.yticks(np.arange(0,fn,10),np.round(freqs[0:fn:10],2))
+plt.xticks(np.arange(0,n/fs,10),np.arange(0,n/fs,10))
+
+plt.show()
+```
+
+
+C++ Example
 =======
 
 ```cpp
@@ -29,44 +106,74 @@ Example
 #include <math.h>
 #include <fcwt.h>
 
-int main(int argc, const char * argv[]) {
+int main(int argc, char * argv[]) {
     
     int n = 100000; //signal length
-    float fs = 1000; //sampling frequency
+    const int fs = 1000; //sampling frequency
     float twopi = 2.0*3.1415;
     
-    //3000 scales spread over 5 octaves
-    const int noctaves = 5;
-    const int nsuboctaves = 600;
+    //3000 frequencies spread logartihmically between 1 and 32 Hz
+    const float f0 = 1;
+    const float f1 = 32;
+    const int fn = 3000;
+
+    //Define number of threads for multithreaded use
+    const int nthreads = 8;
 
     //input: n real numbers
     std::vector<float> sig(n);
     
-    //output: n x scales complex numbers
-    std::vector<float> tfm(n*noctaves*nsuboctaves*2);
+    //output: n x scales
+    std::vector<complex<float>> tfm(n*fn);
     
     //initialize with 1 Hz cosine wave
     for(auto& el : sig) {
-        el = cos(twopi*((float)(&el - &sig[0])/fs));
+        el = cos(twopi*((float)(&el - &sig[0])/(float)fs));
     }
     
+    //Create a wavelet object
+    Wavelet *wavelet;
+    
+    //Initialize a Morlet wavelet having sigma=2.0;
+    Morlet morl(2.0f);
+    wavelet = &morl;
+
+    //Create the continuous wavelet transform object
+    //constructor(wavelet, nthreads, optplan)
+    //
+    //Arguments
+    //wavelet   - pointer to wavelet object
+    //nthreads  - number of threads to use
+    //optplan   - use FFTW optimization plans if true
+    //normalization - take extra time to normalize time-frequency matrix
+    FCWT fcwt(wavelet, nthreads, true, false);
+
+    //Generate frequencies
+    //constructor(wavelet, dist, fs, f0, f1, fn)
+    //
+    //Arguments
+    //wavelet   - pointer to wavelet object
+    //dist      - FCWT_LOGSCALES | FCWT_LINFREQS for logarithmic or linear distribution frequency range
+    //fs        - sample frequency
+    //f0        - beginning of frequency range
+    //f1        - end of frequency range
+    //fn        - number of wavelets to generate across frequency range
+    Scales scs(wavelet, FCWT_LINFREQS, fs, f0, f1, fn);
+
+    //Perform a CWT
+    //cwt(input, length, output, scales)
+    //
     //Arguments:
     //input     - floating pointer to input array
     //length    - integer signal length
     //output    - floating pointer to output array
-    //startoct  - scale range begin (2^startoct)
-    //endoct    - scale range end (2^endoct)
-    //suboct    - exponential subdivisions of each octave
-    //sigma     - parameter to control time-frequency precision
-    //nthreads  - number of threads to use
-    //optplans  - use FFTW optimization plans if true
-    
-    fcwt::cwt(&sig[0], n, &tfm[0], 1, noctaves, nsuboctaves, twopi, 8, false);
-    
+    //scales    - pointer to scales object
+    fcwt.cwt(&sig[0], n, &tfm[0], &scs);
+        
     return 0;
 }
 ```
-_Note: Compile with AVX and OpenMP._
+
 
 Installation
 ==========================
@@ -79,7 +186,7 @@ Dependencies
 - [FFTW] >=3.3  (is included in the zip-file)
 - [OpenMP] >=5
 
-fCWT has been tested on Mac OSX Mojave 10.14.5, Big Sur 11.6 and Windows 10. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9, 16 GB 2400 MHz DDR4. 
+fCWT has been tested on Mac OSX Mojave 10.14.5, Big Sur 11.6 (both on Intel and Apple Silicon), Windows 10, and Ubutnu 20.04. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9, 16 GB 2400 MHz DDR4.
 
 Build time settings
 -------------------
@@ -177,9 +284,8 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 
 MATLAB
 ---------
-You can also enjoy fCWT's extremely fast computation in Matlab using CMake's MEX build option. Unfortunately, MEX-files have to be generated as these files are system and Matlab-version dependent. In the MATLAB-folder you can find MEX-files generated for Mac OSX and Matlab r2020b. I will upload additional MEX-files for other systems and version soon.
 
-When you generated your MEX-files, you can run the example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. 
+In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the build option. For obvious reasons, generation of MEX-files is only possible if MATLAB is installed on your system. 
 
 Note: Expect a decrease in performance when using fCWT via MATLAB. The official benchmark tests MATLAB's CWT implementation via the MATLAB interface and fCWT via the command line. We advice to use fCWT's MATLAB interface solely for plotting purposes. 
 

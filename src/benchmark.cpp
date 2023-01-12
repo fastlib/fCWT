@@ -214,8 +214,7 @@ int main(int argc, char * argv[]) {
 
         Wavelet *wavelet;
         Morlet morl(1.0f);
-        //DOG dog(2);
-        //Paul paul(5);
+        
         wavelet = &morl;
         FCWT fcwt(wavelet, nthreads, true);
         Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);

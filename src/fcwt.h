@@ -99,34 +99,6 @@ private:
     float ifb, fb2;
 };
 
-// class DOG : public Wavelet {
-// public:
-//     FCWT_LIBRARY_API DOG(int order);
-//     ~DOG() { free(mother); };
-    
-//     void generate(int size); //frequency domain
-//     void generate(float* real, float* imag, int size, float scale); //time domain
-//     int getSupport(float scale) { return (int)(fb*scale*3.0f+1); };
-//     int order;
-    
-// private:
-//     float fb, ifb, fb2;
-// };
-
-// class Paul : public Wavelet {
-// public:
-//     FCWT_LIBRARY_API Paul(int porder);
-//     ~Paul() { free(mother); };
-    
-//     void generate(int size); //frequency domain
-//     void generate(float* real, float* imag, int size, float scale); //time domain
-//     int getSupport(float scale) { return (int)(fb*scale*fmax(3.0,(6.0-order*1.0))); };
-//     int order;
-    
-// private:
-//     float fb;
-// };
-
 class Scales {
 public:
     FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
@@ -155,6 +127,8 @@ public:
 
     void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales);
+
+    //Used in Python package
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>** poutput, int* pnoutput);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pnoutput);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);

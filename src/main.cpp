@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
     //input: n real numbers
     std::vector<float> sig(n);
     
-    //output: n x scales x 2 (complex numbers consist of two parts)
+    //output: n x scales
     std::vector<complex<float>> tfm(n*fn);
     
     //initialize with 1 Hz cosine wave
@@ -55,10 +55,6 @@ int main(int argc, char * argv[]) {
     //Initialize a Morlet wavelet having sigma=2.0;
     Morlet morl(2.0f);
     wavelet = &morl;
-
-    //Other wavelets are also possible
-    //DOG dog(int order); 
-    //Paul paul(int order);
 
     //Create the continuous wavelet transform object
     //constructor(wavelet, nthreads, optplan)

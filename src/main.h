@@ -36,7 +36,10 @@ limitations under the License.
     #include <unistd.h>
     #include <pthread.h>
 #endif
-#include <immintrin.h>
+#if defined(__AVX__)
+    #include <immintrin.h>
+    #define AVX
+#endif
 
 using namespace std;
 
