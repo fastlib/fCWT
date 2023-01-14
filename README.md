@@ -1,5 +1,7 @@
 ![](https://github.com/fastlib/fCWT/blob/main/img/githubart.png)
 
+![Stable version](https://img.shields.io/badge/version-2.0.0-brightgreen) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
+
 UPDATE (12-01-2023)
 ===================
 
