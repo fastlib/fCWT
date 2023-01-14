@@ -37,6 +37,9 @@ int main(int argc, char * argv[]) {
 
     //input: n real numbers
     std::vector<float> sig(n);
+
+    //input: n complex numbers
+    std::vector<complex<float>> sigc(n);
     
     //output: n x scales x 2 (complex numbers consist of two parts)
     std::vector<complex<float>> tfm(n*fn);
@@ -44,6 +47,11 @@ int main(int argc, char * argv[]) {
     //initialize with 1 Hz cosine wave
     for(auto& el : sig) {
         el = cos(twopi*((float)(&el - &sig[0])/(float)fs));
+    }
+
+    //initialize with 1 Hz cosine wave
+    for(auto& el : sigc) {
+        el = complex<float>(cos(twopi*((float)(&el - &sigc[0])/(float)fs)), 0.0f);
     }
     
     //Start timing
@@ -89,7 +97,7 @@ int main(int argc, char * argv[]) {
     //length    - integer signal length
     //output    - floating pointer to output array
     //scales    - pointer to scales object
-    fcwt.cwt(&sig[0], n, &tfm[0], &scs);
+    fcwt.cwt(&sigc[0], n, &tfm[0], &scs);
         
     //End timing
     auto finish = chrono::high_resolution_clock::now();

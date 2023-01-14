@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools","numpy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fCWT"
+description = "A Python wrapper around the highly optimized C++ library for very fast calculation of the Continuous Wavelet Transform."
+version = "0.1.12"
+requires-python = ">=3.7"
+authors = [
+	{email="l.p.a.arts@uu.nl"},
+	{name="Lukas P.A. Arts"}
+]
+dependencies = [
+	"numpy >=1.14.5"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+	"Intended Audience :: Science/Research",
+	"Intended Audience :: Developers",
+	"Topic :: Software Development :: Libraries",
+	"Topic :: Scientific/Engineering",
+	"License :: OSI Approved :: Apache Software License",
+	"Operating System :: OS Independent",
+]
+
+[project.urls]
+url = "https://github.com/fastlib/fCWT"
+
+
+[project.optional-dependencies]
+tests = [
+	"pytest < 6"
+]

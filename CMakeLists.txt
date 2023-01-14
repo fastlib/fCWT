@@ -67,27 +67,27 @@ endif()
 link_directories(${PROJECT_SOURCE_DIR})
 
 set(libraryheaders 
-    "./src/fcwt.h"
+    "./src/fcwt/fcwt.h"
 )
 set(implementationheaders 
     "./src/main.h" 
 ) 
 set(benchmarkheaders
     "./src/benchmark.h"
-    "./src/fcwt.h"
+    "./src/fcwt/fcwt.h"
     "./src/rwave-bench.h" 
     "./src/wavelib-bench.h"
 )
 
 set(librarysources 
-    "./src/fcwt.cpp"
+    "./src/fcwt/fcwt.cpp"
 )
 set(implementationsources 
     "./src/main.cpp" 
 )
 set(benchmarksources
     "./src/benchmark.cpp"
-    "./src/fcwt.cpp"
+    "./src/fcwt/fcwt.cpp"
     "./src/rwave-bench.cpp"
     "./src/wavelib-bench.cpp"
 )
@@ -121,8 +121,7 @@ if(BUILD_BENCHMARK)
 endif()
 
 add_executable(fCWT_example ${headers} ${sources})
-include_directories("${PROJECT_SOURCE_DIR}/src/libwavelib")
-include_directories("${PROJECT_SOURCE_DIR}/src/fftw")
+include_directories("${PROJECT_SOURCE_DIR}/libs")
 include_directories("${PROJECT_SOURCE_DIR}/src/MEX")
 
 if(NOT USE_OWN_FFTW)
@@ -133,14 +132,14 @@ if(NOT USE_OWN_FFTW)
         find_library (
             FFTW
             NAMES fftw3fmac # what to look for
-            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            HINTS "${PROJECT_SOURCE_DIR}/libs" # where to look
             NO_DEFAULT_PATH # do not search system default paths
             REQUIRED
         )
         find_library (
             FFTW_OMP
             NAMES fftw3f_ompmac # what to look for
-            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            HINTS "${PROJECT_SOURCE_DIR}/libs" # where to look
             NO_DEFAULT_PATH # do not search system default paths
             REQUIRED
         )
@@ -152,14 +151,14 @@ if(NOT USE_OWN_FFTW)
         find_library (
             FFTW
             NAMES fftw3fl # what to look for
-            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            HINTS "${PROJECT_SOURCE_DIR}/libs" # where to look
             NO_DEFAULT_PATH # do not search system default paths
             REQUIRED
         )
         find_library (
             FFTW_OMP
             NAMES fftw3f_ompl # what to look for
-            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            HINTS "${PROJECT_SOURCE_DIR}/libs" # where to look
             NO_DEFAULT_PATH # do not search system default paths
             REQUIRED
         )
@@ -170,7 +169,7 @@ if(NOT USE_OWN_FFTW)
         find_library (
             FFTW
             NAMES fftw3f # what to look for
-            HINTS "${PROJECT_SOURCE_DIR}/src/fftw" # where to look
+            HINTS "${PROJECT_SOURCE_DIR}/libs" # where to look
             NO_DEFAULT_PATH # do not search system default paths
             REQUIRED
         )
@@ -240,10 +239,10 @@ if(BUILD_BENCHMARK)
 endif()
 
 if(WIN32)
-	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
-	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
-	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Release)
-	file(COPY "${PROJECT_SOURCE_DIR}/src/fftw/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Release)
+	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Release)
+	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Release)
     if(BUILD_BENCHMARK)
 	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
 	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Release)

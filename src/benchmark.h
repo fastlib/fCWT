@@ -29,7 +29,7 @@ limitations under the License.
 
 #include <chrono>
 #include <thread>
-#include <fftw3.h>
+#include "../libs/fftw3.h"
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -44,7 +44,7 @@ limitations under the License.
 using namespace std;
 #include <wavelib.h>
 
-#include "fcwt.h"
+#include "fcwt/fcwt.h"
 #include "rwave-bench.h"
 #include "wavelib-bench.h"
 

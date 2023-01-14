@@ -83,6 +83,27 @@ void Morlet::generate(float* real, float* imag, int size, float scale) {
     //cout << "]" << endl;
 }
 
+void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
+    int w = getSupport(scale);
+
+    float *real = (float*)malloc(sizeof(float)*max(w*2+1,pn));
+    float *imag = (float*)malloc(sizeof(float)*max(w*2+1,pn));
+    for(int t=0; t < max(w*2+1,pn); t++) {
+        real[t] = 0;
+        imag[t] = 0;
+    }
+
+    generate(real,imag,pn,scale);
+
+    for(int t=0; t < pn; t++) {
+        pwav[t].real(real[t]);
+        pwav[t].imag(imag[t]);
+    }
+	
+	delete real;
+	delete imag;
+};
+
 //==============================================================//
 //================== Scales =====================================//
 //==============================================================//
@@ -399,7 +420,7 @@ void FCWT::fft_normalize(complex<float>* out, int size) {
     }
 }
 
-void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales) {
+void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput) {
     
     fftwf_complex *Ihat, *O1;
     size = psize;
@@ -407,9 +428,6 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     //Find nearest power of 2
     const int nt = find2power(size);
     const int newsize = 1 << nt;
-    
-    //Initialize input and mother wavelet memory
-    float* input = (float*)calloc(newsize,sizeof(float));
 
     //Initialize intermediate result
     #ifdef _WIN32
@@ -421,7 +439,6 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     #endif
 
     //Copy input to new input buffer
-    memcpy(input,pinput,sizeof(float)*size);
     memset(Ihat,0,sizeof(fftwf_complex)*newsize);
     memset(O1,0,sizeof(fftwf_complex)*newsize);
     
@@ -439,7 +456,18 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     load_FFT_optimization_plan();
 
     // //Perform forward FFT on input signal
-    p = fftwf_plan_dft_r2c_1d(newsize, &input[0], Ihat, FFTW_ESTIMATE);
+    if(complexinput) {
+        float *input = (float*)calloc(newsize,sizeof(complex<float>));
+        memcpy(input,pinput,sizeof(complex<float>)*size);
+        p = fftwf_plan_dft_1d(newsize, (fftwf_complex*)input, Ihat, FFTW_FORWARD, FFTW_ESTIMATE);
+        free(input);
+    } else {
+        float *input = (float*)calloc(newsize,sizeof(float));
+        memcpy(input,pinput,sizeof(float)*size);
+        p = fftwf_plan_dft_r2c_1d(newsize, &input[0], Ihat, FFTW_ESTIMATE);
+        free(input);
+    }
+
     fftwf_execute(p);
     fftwf_destroy_plan(p);
     
@@ -465,17 +493,15 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     fftwf_destroy_plan(pinv);
     fftwf_free(Ihat);
     fftwf_free(O1);
-    free(input);
 }
 
-void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>** poutput, int* pnoutput) {
-    *poutput = (complex<float>*)malloc(sizeof(complex<float>)*psize*scales->nscales);
-    *pnoutput = psize*scales->nscales;
-    cwt(pinput,psize,*poutput,scales);
+
+void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales) {
+    cwt(pinput,psize,poutput,scales,false);
 }
 
-void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pnoutput) {
-    cwt(pinput,psize,poutput,scales);
+void FCWT::cwt(complex<float> *pinput, int psize, complex<float>* poutput, Scales *scales) {
+    cwt((float*)pinput,psize,poutput,scales,true);
 }
 
 void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2) {
@@ -483,11 +509,8 @@ void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput
     cwt(pinput,psize,poutput,scales);
 }
 
-void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2, float *pfreqs, int pnf) {
+void FCWT::cwt(complex<float> *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2) {
     assert((psize*scales->nscales) == (pn1*pn2));
-    assert(false);
     cwt(pinput,psize,poutput,scales);
-    for(int i=0; i<pnf;i++) {
-        pfreqs[i] = scales->scales[i];
-    }
 }
+
