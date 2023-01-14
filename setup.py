@@ -29,6 +29,10 @@ files = [   "omp.h",
             "libfftw3f_ompl.so",
             "libomp.a"
         ]
+files2 = [
+            "fcwt.h",
+            "fcwt.cpp"
+]
 
 if "macosx" in sysconfig.get_platform() or "darwin" in sysconfig.get_platform():
     libraries = ['fftw3fmac','fftw3f_ompmac']
@@ -59,7 +63,8 @@ setup (ext_modules=[
         packages=find_packages(where='src') + ['fcwt.libs'],
         package_dir={'fcwt': 'src/fcwt',
                     'fcwt.libs': 'libs'},
-        package_data={'fcwt.lib': files}
+        package_data={'fcwt':files2,
+                    'fcwt.libs': files}
         )
 
 #swig -c++ -python fcwt-swig.i
