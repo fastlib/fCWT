@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use fCWT, please cite it as below."
 authors:
-- given-names: Lukas P.A.
+- given-names: L.P.A.
   family-names: Arts
   affiliation: Utrecht University
-- given-names: Egon L.
+- given-names: E.L.
   amily-names: van den Broek
   affiliation: Utrecht University
 title: "The fast continuous wavelet transformation (fCWT)
@@ -17,10 +17,10 @@ url: "https://github.com/fastlib/fcwt"
 preferred-citation:
   type: article
   authors:
-  - given-names: Lukas P.A.
+  - given-names: L.P.A.
     family-names: Arts
     affiliation: Utrecht University
-  - given-names: Egon L.
+  - given-names: E.L.
     amily-names: van den Broek
     affiliation: Utrecht University
   doi: "10.1038/s43588-021-00183-z"
