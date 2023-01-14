@@ -4,7 +4,13 @@ The fast Continuous Wavelet Transform (fCWT)
 ====================================
 ![Stable version](https://img.shields.io/badge/version-2.0.0-blue) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
 
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT.
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT. 
+
+---
+**fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
+
+Please cite our research paper using the sidebar button when using fCWT in your research project. 
+> Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. _Nat Comput Sci_ **2**, 47–58 (2022). https://doi.org/10.1038/s43588-021-00183-z
 
 UPDATE (12-01-2023)
 ===================
@@ -13,11 +19,6 @@ New version available:
 - fCWT can be seamlessly used in Python (see [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.ipynb))
 - Interface upgrade: Use frequencies instead of scales and octaves!
 - Fixed small memory allignment bugs
-
----
-**fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
-
-> Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. _Nat Comput Sci_ **2**, 47–58 (2022). https://doi.org/10.1038/s43588-021-00183-z
 
 Features
 ========

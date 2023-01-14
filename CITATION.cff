@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use fCWT, please cite it as below."
+authors:
+- given-names: Lukas P.A.
+  family-names: Arts
+  affiliation: Utrecht University
+- given-names: Egon L.
+  amily-names: van den Broek
+  affiliation: Utrecht University
+title: "The fast continuous wavelet transformation (fCWT)
+  for real-time, high-quality, noise-resistant
+  time–frequency analysis."
+version: 2.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2020-01-27
+url: "https://github.com/fastlib/fcwt"
+preferred-citation:
+  type: article
+  authors:
+  - given-names: Lukas P.A.
+    family-names: Arts
+    affiliation: Utrecht University
+  - given-names: Egon L.
+    amily-names: van den Broek
+    affiliation: Utrecht University
+  doi: "10.1038/s43588-021-00183-z"
+  journal: "Nat Comput Sci"
+  start: 47 # First page number
+  end: 58 # Last page number
+  title: "The fast continuous wavelet transformation (fCWT)
+  for real-time, high-quality, noise-resistant
+  time–frequency analysis."
+  issue: 1
+  volume: 2
+  year: 2022
