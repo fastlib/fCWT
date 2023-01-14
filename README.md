@@ -1,6 +1,10 @@
 ![](https://github.com/fastlib/fCWT/blob/main/img/githubart.png)
 
+The fast Continuous Wavelet Transform (fCWT)
+====================================
 ![Stable version](https://img.shields.io/badge/version-2.0.0-blue) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
+
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT.
 
 UPDATE (12-01-2023)
 ===================
@@ -9,11 +13,6 @@ New version available:
 - fCWT can be seamlessly used in Python (see [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.ipynb))
 - Interface upgrade: Use frequencies instead of scales and octaves!
 - Fixed small memory allignment bugs
-
-The fast Continuous Wavelet Transform (fCWT)
-====================================
-
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT.
 
 ---
 **fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
@@ -95,10 +94,10 @@ Columns are formatted as X-Y, where X is signal length in samples and Y the numb
 | fCWT (Python)         | 0.027s  | 0.23s    | 0.075s   | 0.57s     | -              | 
 | fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
 |                       |         |          |          |           |                |
-| CCWT (Python)         | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
-| PyWavelets (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
+| [CCWT] (Python)       | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
+| [PyWavelets] (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
 | Matlab                | 0.75s   | 0.86s    | 1.06s    | 13.26s    | 35.85x         |
-| SsqueezePy (Python)   | 0.04s   | 0.43s    | 1.16s    | 17.76s    | 48.00x         |
+| [SsqueezePy] (Python) | 0.04s   | 0.43s    | 1.16s    | 17.76s    | 48.00x         |
 | SciPy (Python)        | 0.19s   | 1.82s    | 2.11s    | 18.70s    | 50.54x         |
 | Rwave (C)             | 0.18s   | 1.84s    | 2.28s    | 23.22s    | 62.75x         |
 | Mathematica           | -       | -        | -        | 27.83s    | 75.20x         |
@@ -355,3 +354,6 @@ References
 [OpenMP]: https://www.openmp.org/
 [FFTW]: https://www.fftw.org/
 [Visual_Studio]: https://www.visualstudio.com/
+[CCWT]: https://github.com/lichtso/CCWT
+[SsqueezePy]: https://github.com/OverLordGoldDragon/ssqueezepy
+[PyWavelets]: https://pywavelets.readthedocs.io/en/latest/
