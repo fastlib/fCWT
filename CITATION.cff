@@ -5,7 +5,7 @@ authors:
   family-names: Arts
   affiliation: Utrecht University
 - given-names: E.L.
-  amily-names: van den Broek
+  family-names: van den Broek
   affiliation: Utrecht University
 title: "The fast continuous wavelet transformation (fCWT)
   for real-time, high-quality, noise-resistant
@@ -21,7 +21,7 @@ preferred-citation:
     family-names: Arts
     affiliation: Utrecht University
   - given-names: E.L.
-    amily-names: van den Broek
+    family-names: van den Broek
     affiliation: Utrecht University
   doi: "10.1038/s43588-021-00183-z"
   journal: "Nat Comput Sci"
