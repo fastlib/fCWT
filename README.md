@@ -46,7 +46,13 @@ Python
 
 Install the Python package using pip:
 ```
-pip install fcwt
+$ pip install fcwt
+```
+or if you want to install from source:
+```
+$ git clone https://github.com/fastlib/fCWT.git
+$ cd fCWT
+$ pip install .
 ```
 See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.ipynb) for documentation.
 
