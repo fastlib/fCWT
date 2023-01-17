@@ -4,7 +4,7 @@ The fast Continuous Wavelet Transform (fCWT)
 ====================================
 ![Stable version](https://img.shields.io/badge/version-2.0.0-blue) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
 
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++, Python, and Matlab.
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++ and Python.
 
 **fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
 
@@ -27,7 +27,7 @@ Features
 - Real-time CWT for signals having sample frequencies of up to 200kHz
 - Applicable in many applications ranging from audio and speech to engine vibration analysis
 - Easy Python integration via pip
-- Easy MATLAB integration via MEX-files
+- Coming soon: Easy MATLAB integration via MEX-files
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
@@ -40,7 +40,7 @@ Features
 Quickstart 
 ============
 
-fCWT's implementation can be used to accelerate your C++, Matlab, and Python projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
+fCWT's implementation can be used to accelerate your C++, Python, and (Matlab) projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
 
 Python
 ---
@@ -59,14 +59,7 @@ See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.i
 
 Matlab
 ---
-Compile the MEX wrappers for the fCWT functions using the following MEX commands:
-```
-mex src/MEX/fcwtmex.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfftw3f_ompmac -lomp -R2018a
-mex src/MEX/fcwtmexplan.cpp src/fcwt.cpp -Isrc/fftw -Lsrc/fftw -lfftw3fmac -lfftw3f_ompmac -lomp -R2018a
-```
-You need to adjust the fftw3f library names depending on your system. See the `src/fftw` folder for the specific library names.
-
-See this [matlab example script](https://github.com/fastlib/fCWT/blob/main/MATLAB/example.mlx) for documentation.
+_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
 
 C++
 ---
@@ -330,6 +323,7 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 
 MATLAB
 ---------
+_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
 
 In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the commands listed in the `quickstart` section.
 

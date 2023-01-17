@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "mex.h"
 #include "matrix.h"
-#include "../fcwt.h"
+#include "../fcwt/fcwt.h"
 
 //The gateway function
 void mexFunction(int nlhs, mxArray *plhs[],
@@ -94,7 +94,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     
     mwSize dims[2] = {ncols,fn};
     
-    plhs[0] = mxCreateNumericArray(2,dims, mxSINGLE_CLASS, mxCOMPLEX);
+    plhs[0] = mxCreateNumericArray(2, dims, mxSINGLE_CLASS, mxCOMPLEX);
     complex<float>* outMatrixf = (complex<float>*)mxGetComplexSingles(plhs[0]);
     
     mwSize dimsscale[2] = {1,fn};

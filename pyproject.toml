@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fCWT"
 description = "A Python wrapper around the highly optimized C++ library for very fast calculation of the Continuous Wavelet Transform."
-version = "0.1.13"
+version = "0.1.15"
 requires-python = ">=3.7"
 authors = [
 	{email="l.p.a.arts@uu.nl"},

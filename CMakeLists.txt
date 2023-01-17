@@ -8,6 +8,7 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library?" ON)
 option(USE_OWN_FFTW "Use own FFTW installation?" OFF)
 option(BUILD_BENCHMARK "Build Benchmark?" OFF)
+option(BUILD_MATLAB "Build Matlab mex?" OFF)
 
 if(NOT DEFINED CMAKE_BUILD_TYPE OR NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -249,6 +250,31 @@ if(WIN32)
     endif()
 endif()
 
+
+if(BUILD_MATLAB)
+    set(MATLAB_FIND_DEBUG)
+    
+    #Add MATLAB 2021a as possible export
+    set(MATLAB_ADDITIONAL_VERSIONS "R2020b=9.9")
+    
+    find_package(Matlab)
+    
+    matlab_add_mex(
+        NAME fCWTmex
+        SRC src/MEX/fcwtmex.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT
+        LINK_TO ${FFTW} ${FFTW_OMP}
+        R2018a
+    )
+    
+    # matlab_add_mex(
+    #     NAME fCWTmexplan
+    #     SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+    #     OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
+    #     LINK_TO ${FFTW} ${FFTW_OMP}
+    #     R2018a
+    # )
+endif()
 
 # Installing
 

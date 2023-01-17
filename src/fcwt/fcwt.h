@@ -45,13 +45,13 @@ limitations under the License.
 
 #include <iostream>
 #include <sstream>
-#include "../../libs/omp.h"
+#include "omp.h"
 #ifdef _WIN32
     #include <windows.h>
 #else
     #include <unistd.h>
 #endif
-#include "../../libs/fftw3.h"
+#include "fftw3.h"
 #include <memory>
 //check if avx is supported and include the header
 #if defined(__AVX__)
