@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
     float twopi = 2.0*3.1415;
     
     //3000 frequencies spread logartihmically between 1 and 32 Hz
-    const float f0 = 1;
+    const float f0 = 0.1;
     const float f1 = 20;
     const int fn = 3000;
 
@@ -106,7 +106,7 @@ int main(int argc, char * argv[]) {
     chrono::duration<double> elapsed = finish - start;
     
     cout << "=== fCWT example ===" << endl;
-    cout << "Calculate CWT of a 100k sample sinusodial signal using a [1-32] Hz logarithmic frequency range and 3000 wavelets." << endl;
+    cout << "Calculate CWT of a 100k sample sinusodial signal using a [" << f0 << "-" << f1 << "] Hz logarithmic frequency range and 3000 wavelets." << endl;
     cout << "====================" << endl;
     cout << "fCWT finished in " << elapsed.count() << "s" << endl;
 

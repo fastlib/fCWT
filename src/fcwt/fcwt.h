@@ -45,7 +45,10 @@ limitations under the License.
 
 #include <iostream>
 #include <sstream>
-#include "omp.h"
+
+#ifndef SINGLE_THREAD
+    #include <omp.h>
+#endif
 #ifdef _WIN32
     #include <windows.h>
 #else

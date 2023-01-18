@@ -48,22 +48,21 @@ project(fCWT VERSION 2.0 DESCRIPTION "Highly optimized implementation of the Con
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(KMP_DUPLICATE_LIB_OK TRUE)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-find_package(OpenMP REQUIRED)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
-
 if(UNIX)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/local/include -L/usr/local/lib -Xpreprocessor -fopenmp -lomp -fPIC -mavx -O2 -lm")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -mavx -O2")
 elseif(WIN32)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX /O2 /W1")
 endif()
+
+#set cmake linker flags
+link_libraries("-lm -Wl,-no_compact_unwind")
 
 link_directories(${PROJECT_SOURCE_DIR})
 
@@ -115,7 +114,6 @@ set_target_properties(${fcwt_library_target}
     VERSION ${PROJECT_VERSION}
 )
 
-
 # add the executable
 if(BUILD_BENCHMARK)
     add_executable(fCWT_benchmark ${benchmarkheaders} ${benchmarksources}) 
@@ -123,7 +121,47 @@ endif()
 
 add_executable(fCWT_example ${headers} ${sources})
 include_directories("${PROJECT_SOURCE_DIR}/libs")
+include_directories("/usr/local/include")
 include_directories("${PROJECT_SOURCE_DIR}/src/MEX")
+link_directories("${PROJECT_SOURCE_DIR}/libs")
+link_directories("/usr/local/lib")
+
+if(APPLE)
+    set(OpenMP_INCLUDES "/usr/local/opt/libomp/include")
+    set(OpenMP_LIBRARIES "/usr/local/opt/libomp/lib")
+    set(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp")
+    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp")
+    set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5")
+    set(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5")
+    set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES})
+    set(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES})
+    set(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES})
+    set(OpenMP_omp_LIBRARY ${OpenMP_C_LIB_NAMES})
+    set(OpenMP_gomp_LIBRARY ${OpenMP_C_LIB_NAMES})
+    set(OpenMP_iomp5_LIBRARY ${OpenMP_C_LIB_NAMES})
+endif()
+
+find_package(OpenMP REQUIRED)
+
+if(OpenMP_FOUND)
+    message("OpenMP found")
+    target_include_directories(${fcwt_library_target} PUBLIC ${OpenMP_INCLUDES})
+    target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
+    target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
+
+    target_include_directories(fCWT_example PUBLIC ${OpenMP_INCLUDES})
+    target_link_directories(fCWT_example PUBLIC ${OpenMP_LIBRARIES})
+    target_link_libraries(fCWT_example PUBLIC "-lomp")
+
+    if(BUILD_BENCHMARK)
+        target_include_directories(fCWT_benchmark PUBLIC ${OpenMP_INCLUDES})
+        target_link_directories(fCWT_benchmark PUBLIC ${OpenMP_LIBRARIES})
+        target_link_libraries(fCWT_benchmark PUBLIC "-lomp")
+    endif()
+
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
 if(NOT USE_OWN_FFTW)
     #check if we are on a arm64 mac
@@ -209,6 +247,7 @@ if(BUILD_BENCHMARK)
     message("STATUS OF LIBRARY: WAVELIB: [${WAVELIB}]")
 endif()
 
+
 if(FFTW)
     target_link_libraries(fCWT_example PRIVATE ${FFTW})
     if(BUILD_BENCHMARK)
@@ -266,6 +305,10 @@ if(BUILD_MATLAB)
         LINK_TO ${FFTW} ${FFTW_OMP}
         R2018a
     )
+
+    #set compile options
+    set_target_properties(fCWTmex PROPERTIES COMPILE_FLAGS "-g -DSINGLE_THREAD")
+
     
     # matlab_add_mex(
     #     NAME fCWTmexplan
