@@ -23,8 +23,6 @@ limitations under the License.
 #include <string.h>
 #include "../fcwt/fcwt.h"
 
-#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-
 //The gateway function
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
@@ -78,6 +76,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
     mexWarnMsgIdAndTxt("fcwt:nothreads","Threads are currently not supported in Matlab. Using nthreads=1. See Issue #17 on Github.");
     mexPrintf("using N:%d",size,nthreads);
 
+
+    mwSize c0 = mxGetScalar(prhs[1]);
 
     Wavelet *wavelet;
     Morlet morl(1.0);

@@ -332,6 +332,7 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
             fftwf_init_threads();
             fftwf_plan_with_nthreads(omp_get_max_threads());
         #endif
+        
         fftwf_plan p_for;
         fftwf_plan p_back;
         
@@ -466,14 +467,15 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     memset(O1,0,sizeof(fftwf_complex)*newsize);
     
     #ifndef SINGLE_THREAD
-        // //Initialize FFTW plans
+        //Initialize FFTW plans
         omp_set_num_threads(threads);
-    
-        // //Initialize FFTW plans
+        
+        //Initialize FFTW plans
         fftwf_init_threads();
     
         fftwf_plan_with_nthreads(threads);
     #endif
+    
     fftwf_plan pinv;
     fftwf_plan p;
     
