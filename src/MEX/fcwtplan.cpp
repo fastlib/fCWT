@@ -23,8 +23,6 @@ limitations under the License.
 #include <string.h>
 #include "../fcwt/fcwt.h"
 
-#define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
-
 //The gateway function
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
