@@ -59,7 +59,16 @@ See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.i
 
 Matlab
 ---
-_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
+Build fCWT from source:
+```
+$ git clone https://github.com/fastlib/fCWT.git
+$ cd fCWT
+$ mkdir -p build
+$ cd build
+$ cmake ../ -DBUILD_MATLAB=ON
+$ make 
+```
+Two .mex files should now have been created in the `MATLAB` folder. Run the `example.mlx` live script to see how to use fCWT in Matlab. fCWT has been tested in R2022b on an Intel Apple Macbook Pro.
 
 C++
 ---
@@ -225,7 +234,8 @@ Settings that may be specified at build time by using [CMake] variables are:
   1. the flag to build a shared library instead of static (default is on);
   2. whether or not you want to use your own FFTW installation*;
   3. whether or not you want to build the `BENCHMARK` target;
-  3. installation directories.
+  4. whether or not you want to build the `MEX` files for MATLAB;
+  5. installation directories.
 
 Details:
 
@@ -237,6 +247,8 @@ Details:
 |USE_OWN_FFTW *|On \| Off|Off|Off|
 |**The flag to build benchmark target**||||
 |BUILD_BENCHMARK|On \| Off|Off|Off|
+|**The flag to build MATLAB MEX files**||||
+|BUILD_MATLAB|On \| Off|Off|Off|
 |**Installation directories**||||
 |FCWT_MATLAB_DIR|*a path relative to `build`*|"../MATLAB"|"../MATLAB"|
 |CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles (x86)%\fCWT"|
@@ -323,7 +335,6 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 
 MATLAB
 ---------
-_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
 
 In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the commands listed in the `quickstart` section.
 
