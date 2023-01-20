@@ -48,9 +48,6 @@ project(fCWT VERSION 2.0 DESCRIPTION "Highly optimized implementation of the Con
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(KMP_DUPLICATE_LIB_OK TRUE)
-
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
@@ -142,26 +139,55 @@ if(APPLE)
 endif()
 
 find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+    if(APPLE)
+        target_include_directories(${fcwt_library_target} PUBLIC ${OpenMP_INCLUDES})
+        target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
+        target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
 
-if(OpenMP_FOUND)
-    message("OpenMP found")
-    target_include_directories(${fcwt_library_target} PUBLIC ${OpenMP_INCLUDES})
-    target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
-    target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
+        target_include_directories(fCWT_example PUBLIC ${OpenMP_INCLUDES})
+        target_link_directories(fCWT_example PUBLIC ${OpenMP_LIBRARIES})
+        target_link_libraries(fCWT_example PUBLIC "-lomp")
 
-    target_include_directories(fCWT_example PUBLIC ${OpenMP_INCLUDES})
-    target_link_directories(fCWT_example PUBLIC ${OpenMP_LIBRARIES})
-    target_link_libraries(fCWT_example PUBLIC "-lomp")
-
-    if(BUILD_BENCHMARK)
-        target_include_directories(fCWT_benchmark PUBLIC ${OpenMP_INCLUDES})
-        target_link_directories(fCWT_benchmark PUBLIC ${OpenMP_LIBRARIES})
-        target_link_libraries(fCWT_benchmark PUBLIC "-lomp")
+        if(BUILD_BENCHMARK)
+            target_include_directories(fCWT_benchmark PUBLIC ${OpenMP_INCLUDES})
+            target_link_directories(fCWT_benchmark PUBLIC ${OpenMP_LIBRARIES})
+            target_link_libraries(fCWT_benchmark PUBLIC "-lomp")
+        endif()
     endif()
-
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
+# if(OpenMP_FOUND)
+#     message("OpenMP found")
+#     if(APPLE)
+#         target_include_directories(${fcwt_library_target} PUBLIC ${OpenMP_INCLUDES})
+#         target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
+#         target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
+
+#         target_include_directories(fCWT_example PUBLIC ${OpenMP_INCLUDES})
+#         target_link_directories(fCWT_example PUBLIC ${OpenMP_LIBRARIES})
+#         target_link_libraries(fCWT_example PUBLIC "-lomp")
+
+#         if(BUILD_BENCHMARK)
+#             target_include_directories(fCWT_benchmark PUBLIC ${OpenMP_INCLUDES})
+#             target_link_directories(fCWT_benchmark PUBLIC ${OpenMP_LIBRARIES})
+#             target_link_libraries(fCWT_benchmark PUBLIC "-lomp")
+#         endif()
+#     else()
+#         if(UNIX)
+#             target_link_libraries(${fcwt_library_target} PUBLIC OpenMP::OpenMP_CXX)
+#             target_link_libraries(fCWT_example PUBLIC OpenMP::OpenMP_CXX)
+#             if(BUILD_BENCHMARK)
+#                 target_link_libraries(fCWT_benchmark PUBLIC OpenMP::OpenMP_CXX)
+#             endif()
+#         endif()
+#     endif()
+
+#     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+#     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+# endif()
 
 if(NOT USE_OWN_FFTW)
     #check if we are on a arm64 mac
@@ -309,14 +335,15 @@ if(BUILD_MATLAB)
     #set compile options
     set_target_properties(fCWTmex PROPERTIES COMPILE_FLAGS "-g -DSINGLE_THREAD")
 
-    
-    # matlab_add_mex(
-    #     NAME fCWTmexplan
-    #     SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
-    #     OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
-    #     LINK_TO ${FFTW} ${FFTW_OMP}
-    #     R2018a
-    # )
+    matlab_add_mex(
+        NAME fCWTmexplan
+        SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
+        LINK_TO ${FFTW} ${FFTW_OMP}
+        R2018a
+    )
+
+    set_target_properties(fCWTmexplan PROPERTIES COMPILE_FLAGS "-g -DSINGLE_THREAD")
 endif()
 
 # Installing

@@ -115,6 +115,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
         outScales[i] = ((float)fs)/outScales[i];
     }
 
+    mexWarnMsgIdAndTxt("fcwt:nothreads","Threads are currently not supported in Matlab. Using nthreads=1. See Issue #17 on Github.");
+
     fcwt.cwt(inMatrix, ncols, outMatrixf, &scs);
 }
 
