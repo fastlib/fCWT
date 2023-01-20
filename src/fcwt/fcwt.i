@@ -7,6 +7,7 @@
 
 %include "numpy.i"
 %include "exception.i"
+%include "std_string.i"
 
 %init %{
 import_array();
@@ -58,29 +59,6 @@ public:
     float fb;
 };
 
-// Potential future wavelet types
-// class DOG : public Wavelet {
-// public:
-//     DOG(int order);
-    
-//     void generate(int size); //frequency domain
-//     void generate(float* real, float* imag, int size, float scale); //time domain
-//     int getSupport(float scale) { return (int)(fb*scale*3.0f+1); };
-//     void getWavelet(float scale, complex<float>* pwav, int pn);
-//     int order;
-// };
-
-// class Paul : public Wavelet {
-// public:
-//     Paul(int porder);
-    
-//     void generate(int size); //frequency domain
-//     void generate(float* real, float* imag, int size, float scale); //time domain
-//     int getSupport(float scale) { return (int)(fb*scale*fmax(3.0,(6.0-order*1.0))); };
-//     void getWavelet(float scale, complex<float>* pwav, int pn);
-//     int order;
-// };
-
 class Scales {
 public:
     Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
@@ -97,7 +75,7 @@ class FCWT {
 public:
     FCWT(Wavelet *pwav, int pthreads, bool puse_optimalization_schemes, bool puse_normalization);
     
-    void create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
+    void create_FFT_optimization_plan(int pmaxsize, std::string poptimizationflags);
     void cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
     void cwt(complex<float>*pcinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
 

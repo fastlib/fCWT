@@ -4,7 +4,7 @@ The fast Continuous Wavelet Transform (fCWT)
 ====================================
 ![Stable version](https://img.shields.io/badge/version-2.0.0-blue) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
 
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++ and Python.
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++, Matlab, and Python.
 
 **fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
 
@@ -27,7 +27,7 @@ Features
 - Real-time CWT for signals having sample frequencies of up to 200kHz
 - Applicable in many applications ranging from audio and speech to engine vibration analysis
 - Easy Python integration via pip
-- Coming soon: Easy MATLAB integration via MEX-files
+- Easy MATLAB integration via MEX-files
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
@@ -35,12 +35,12 @@ Features
 |**fCWT for real-time Electroencephalography (EEG) analysis**    |**fCWT for real-time engine diagnostics**                       |
 |<img src="https://github.com/fastlib/fCWT/blob/main/img/eeg2.png" alt="fcwteeg2" width="400"/>|<img src="https://github.com/fastlib/fCWT/blob/main/img/engine.png" alt="fcwtengine" width="400"/>|
 
-*Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
+*Based on C++ performance. **fCWT is the fastest CWT library in C++, Python and Matlab!** Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
 Quickstart 
 ============
 
-fCWT's implementation can be used to accelerate your C++, Python, and (Matlab) projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
+fCWT's implementation can be used to accelerate your C++, Python, and Matlab projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
 
 Python
 ---
@@ -59,7 +59,16 @@ See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.i
 
 Matlab
 ---
-_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
+Build MEX-files from source:
+```
+$ git clone https://github.com/fastlib/fCWT.git
+$ cd fCWT
+$ mkdir -p build
+$ cd build
+$ cmake ../ -DBUILD_MATLAB=ON
+$ make 
+```
+Two .mex files should now have been created in the `MATLAB` folder. Run the `example.mlx` live script to see how to use fCWT in Matlab. fCWT has been tested in R2022b on an Intel Apple Macbook Pro.
 
 C++
 ---
@@ -69,7 +78,7 @@ $ git clone https://github.com/fastlib/fCWT.git
 $ cd fCWT
 $ mkdir -p build
 $ cd build
-$ cmake ../
+$ cmake ../ [-DBUILD_BENCHMARK=ON|OFF]
 $ make 
 $ sudo make install
 ```
@@ -79,16 +88,16 @@ See the Installation section for more details about building fCWT from source fo
 Benchmark
 ========
 
-Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9 4.5 Ghz Boost, 16 GB 2400 MHz DDR4.
+Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9 4.5 Ghz Boost, 16 GB 2400 MHz DDR4. See the 'Usage: Benchmark' section for more details about the C++ benchmark. See the [Benchmark Notebook](https://github.com/fastlib/fCWT/blob/main/benchmark.ipynb) for the fCWT Python benchmark.
 
 | Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
 |-----------------------|---------|----------|----------|-----------|----------------|
 | fCWT (C++)            | 0.005s  | 0.04s    | 0.03s    | 0.32s     | -              |
-| fCWT (Python)         | 0.027s  | 0.23s    | 0.075s   | 0.57s     | -              | 
+| fCWT (Python)         | 0.011s  | 0.089s   | 0.074s   | 0.66s     | -              | 
 | fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
 |                       |         |          |          |           |                |
 | [CCWT] (Python)       | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
-| [PyWavelets] (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
+| [PyWavelets] (Python) | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
 | Matlab                | 0.75s   | 0.86s    | 1.06s    | 13.26s    | 35.85x         |
 | [SsqueezePy] (Python) | 0.04s   | 0.43s    | 1.16s    | 17.76s    | 48.00x         |
 | SciPy (Python)        | 0.19s   | 1.82s    | 2.11s    | 18.70s    | 50.54x         |
@@ -225,7 +234,8 @@ Settings that may be specified at build time by using [CMake] variables are:
   1. the flag to build a shared library instead of static (default is on);
   2. whether or not you want to use your own FFTW installation*;
   3. whether or not you want to build the `BENCHMARK` target;
-  3. installation directories.
+  4. whether or not you want to build the `MEX` files for MATLAB;
+  5. installation directories.
 
 Details:
 
@@ -237,6 +247,8 @@ Details:
 |USE_OWN_FFTW *|On \| Off|Off|Off|
 |**The flag to build benchmark target**||||
 |BUILD_BENCHMARK|On \| Off|Off|Off|
+|**The flag to build MATLAB MEX files**||||
+|BUILD_MATLAB|On \| Off|Off|Off|
 |**Installation directories**||||
 |FCWT_MATLAB_DIR|*a path relative to `build`*|"../MATLAB"|"../MATLAB"|
 |CMAKE_INSTALL_PREFIX|*an absolute path*|"/usr/local"|"%ProgramFiles (x86)%\fCWT"|
@@ -323,7 +335,6 @@ By default, the source code performs 10 runs for demonstration purposes. To matc
 
 MATLAB
 ---------
-_The Matlab wrapper for fCWT version 2.0 is currently under development. Please use the Python package or native C++._ 
 
 In the MATLAB-folder, we provided an example live-script titled `example.mlx`. The example includes basic MATLAB-implementation on how to generate fCWT optimization plans and calculate time-frequency matrices using fCWT. To use fCWT with MATLAB, make sure you generate the MEX-files using the commands listed in the `quickstart` section.
 

@@ -214,8 +214,9 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         int batchsize = (endpoint4/athreads);
         int s4 = (isize>>2)-1;
 
-
-        #pragma omp parallel for
+        #ifndef SINGLE_THREAD
+            #pragma omp parallel for
+        #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
             int end = batchsize*(i+1);
@@ -278,7 +279,9 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         float maximum = isizef-1;
         int s1 = isize-1;
 
-        #pragma omp parallel for
+        #ifndef SINGLE_THREAD
+            #pragma omp parallel for
+        #endif
         for(int i=0; i<athreads; i++) {
             int start = batchsize*i;
             int end = batchsize*(i+1);
@@ -322,11 +325,14 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         fftwf_complex *O1 = fftwf_alloc_complex(n);
         fftwf_complex *out = fftwf_alloc_complex(n);
         
-        // omp_set_num_threads(threads);
-        // std::cout << "Threads:" << omp_get_max_threads() << std::endl;
+        #ifndef SINGLE_THREAD
+            omp_set_num_threads(threads);
+            std::cout << "Threads:" << omp_get_max_threads() << std::endl;
         
-        fftwf_init_threads();
-        // fftwf_plan_with_nthreads(omp_get_max_threads());
+            fftwf_init_threads();
+            fftwf_plan_with_nthreads(omp_get_max_threads());
+        #endif
+        
         fftwf_plan p_for;
         fftwf_plan p_back;
         
@@ -347,6 +353,24 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         
         std::cout << "Optimization schemes for N: " << n << " have been calculated. Next time you use fCWT it will automatically choose the right optimization scheme based on number of threads and signal length." << std::endl;
     }
+}
+void FCWT::create_FFT_optimization_plan(int maxsize, string flags) {
+    int flag = 0;
+    
+    if(flags == "FFTW_MEASURE") {
+        flag = FFTW_MEASURE;
+    } else if(flags == "FFTW_PATIENT") {
+        flag = FFTW_PATIENT;
+    } else if(flags == "FFTW_EXHAUSTIVE") {
+        flag = FFTW_EXHAUSTIVE;
+    } else if(flags == "FFTW_ESTIMATE") {
+        flag = FFTW_ESTIMATE;
+    } else {
+        std::cerr << "Unknown flag: " << flags << std::endl;
+        return;
+    }
+    
+    create_FFT_optimization_plan(maxsize, flag);
 }
 
 void FCWT::load_FFT_optimization_plan() {
@@ -409,7 +433,7 @@ void FCWT::fft_normalize(complex<float>* out, int size) {
     int nbatch = threads;
     int batchsize = (int)ceil((float)size/((float)threads));
     
-    #pragma omp parallel for
+    //#pragma omp parallel for
     for(int i=0; i<nbatch; i++) {
         int start = batchsize*i;
         int end = min(size,batchsize*(i+1));
@@ -442,13 +466,16 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     memset(Ihat,0,sizeof(fftwf_complex)*newsize);
     memset(O1,0,sizeof(fftwf_complex)*newsize);
     
-    // //Initialize FFTW plans
-    // omp_set_num_threads(threads);
+    #ifndef SINGLE_THREAD
+        //Initialize FFTW plans
+        omp_set_num_threads(threads);
+        
+        //Initialize FFTW plans
+        fftwf_init_threads();
     
-    // //Initialize FFTW plans
-    fftwf_init_threads();
+        fftwf_plan_with_nthreads(threads);
+    #endif
     
-    // fftwf_plan_with_nthreads(omp_get_max_threads());
     fftwf_plan pinv;
     fftwf_plan p;
     
@@ -462,9 +489,10 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
         memcpy(input,pinput,sizeof(complex<float>)*size);
         p = fftwf_plan_dft_1d(newsize, (fftwf_complex*)input, Ihat, FFTW_FORWARD, FFTW_ESTIMATE);
     } else {
-        input = (float*)calloc(newsize,sizeof(float));
+        input = (float*)malloc(newsize*sizeof(float));
+        memset(input,0,newsize*sizeof(float));
         memcpy(input,pinput,sizeof(float)*size);
-        p = fftwf_plan_dft_r2c_1d(newsize, &input[0], Ihat, FFTW_ESTIMATE);
+        p = fftwf_plan_dft_r2c_1d(newsize, input, Ihat, FFTW_ESTIMATE);
     }
 
     fftwf_execute(p);
@@ -489,7 +517,7 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
         out = out + size;
     }
     
-    //Cleanup
+    // //Cleanup
     fftwf_destroy_plan(pinv);
     #ifdef _WIN32
         _aligned_free(Ihat);

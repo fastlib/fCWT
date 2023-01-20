@@ -79,7 +79,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
     }
     
     float *inMatrix;       /* 1xN input matrix */
-    mwSize c0, fs, f0, f1, fn, nthreads;
+    float f0, f1, c0;
+    mwSize fs, fn, nthreads;
     mwSize ncols;           /* size of matrix */
     
     inMatrix = mxGetSingles(prhs[0]);
@@ -105,10 +106,16 @@ void mexFunction(int nlhs, mxArray *plhs[],
     Morlet morl(c0);
     wavelet = &morl;
 
-    FCWT fcwt(wavelet, nthreads, true, true);
+    FCWT fcwt(wavelet, 1, true, true); //threads = 1 because of OMP bug
     Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);
 
     scs.getScales(outScales, fn);
+
+    for (int i = 0; i < fn; i++) {
+        outScales[i] = ((float)fs)/outScales[i];
+    }
+
+    mexWarnMsgIdAndTxt("fcwt:nothreads","Threads are currently not supported in Matlab. Using nthreads=1. See Issue #17 on Github.");
 
     fcwt.cwt(inMatrix, ncols, outMatrixf, &scs);
 }

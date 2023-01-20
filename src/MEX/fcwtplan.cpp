@@ -73,15 +73,17 @@ void mexFunction(int nlhs, mxArray *plhs[],
         mexPrintf("Using 'exhaustive' to calculate plan ");
     }
     
-    mexPrintf("using N:%d and %d threads.",size,nthreads);
+    mexWarnMsgIdAndTxt("fcwt:nothreads","Threads are currently not supported in Matlab. Using nthreads=1. See Issue #17 on Github.");
+    mexPrintf("using N:%d",size,nthreads);
+
 
     mwSize c0 = mxGetScalar(prhs[1]);
 
     Wavelet *wavelet;
-    Morlet morl(c0);
+    Morlet morl(1.0);
     wavelet = &morl;
 
-    FCWT fcwt(wavelet, nthreads, true, true);
+    FCWT fcwt(wavelet, nthreads, true, false);
 
     fcwt.create_FFT_optimization_plan(size,method);
 }

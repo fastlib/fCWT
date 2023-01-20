@@ -33,12 +33,12 @@ def cwt(input, fs, f0, f1, fn, nthreads=1, scaling="lin", fast=False, norm=True)
 
     return freqs, output
 
-def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, fast=False, norm=True):
+def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, norm=True):
     
     f0 = f0 if f0 else 1/(input.size/fs)
     f1 = f1 if f1 else fs/2
     fn = fn if fn else 100
-    freqs, output = cwt(input, fs, f0, f1, fn, nthreads=nthreads, scaling="lin", fast=fast, norm=norm)
+    freqs, output = cwt(input, fs, f0, f1, fn, nthreads=nthreads, scaling=scaling, fast=fast, norm=norm)
 
     #create two subplots
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
