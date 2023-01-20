@@ -322,11 +322,11 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         fftwf_complex *O1 = fftwf_alloc_complex(n);
         fftwf_complex *out = fftwf_alloc_complex(n);
         
-        omp_set_num_threads(threads);
-        std::cout << "Threads:" << omp_get_max_threads() << std::endl;
+        // omp_set_num_threads(threads);
+        // std::cout << "Threads:" << omp_get_max_threads() << std::endl;
         
         fftwf_init_threads();
-        fftwf_plan_with_nthreads(omp_get_max_threads());
+        // fftwf_plan_with_nthreads(omp_get_max_threads());
         fftwf_plan p_for;
         fftwf_plan p_back;
         
@@ -443,12 +443,12 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     memset(O1,0,sizeof(fftwf_complex)*newsize);
     
     // //Initialize FFTW plans
-    omp_set_num_threads(threads);
+    // omp_set_num_threads(threads);
     
     // //Initialize FFTW plans
     fftwf_init_threads();
     
-    fftwf_plan_with_nthreads(omp_get_max_threads());
+    // fftwf_plan_with_nthreads(omp_get_max_threads());
     fftwf_plan pinv;
     fftwf_plan p;
     
