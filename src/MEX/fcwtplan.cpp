@@ -75,6 +75,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
     
     mexPrintf("using N:%d and %d threads.",size,nthreads);
 
+    mwSize c0 = mxGetScalar(prhs[1]);
+
     Wavelet *wavelet;
     Morlet morl(c0);
     wavelet = &morl;
