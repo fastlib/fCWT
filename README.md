@@ -93,7 +93,7 @@ Columns are formatted as X-Y, where X is signal length in samples and Y the numb
 | Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
 |-----------------------|---------|----------|----------|-----------|----------------|
 | fCWT (C++)            | 0.005s  | 0.04s    | 0.03s    | 0.32s     | -              |
-| fCWT (Python)         | 0.027s  | 0.23s    | 0.075s   | 0.57s     | -              | 
+| fCWT (Python)         | 0.027s  | 0.23s    | 0.05s   | 0.49s     | -              | 
 | fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
 |                       |         |          |          |           |                |
 | [CCWT] (Python)       | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
