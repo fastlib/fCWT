@@ -35,7 +35,7 @@ Features
 |**fCWT for real-time Electroencephalography (EEG) analysis**    |**fCWT for real-time engine diagnostics**                       |
 |<img src="https://github.com/fastlib/fCWT/blob/main/img/eeg2.png" alt="fcwteeg2" width="400"/>|<img src="https://github.com/fastlib/fCWT/blob/main/img/engine.png" alt="fcwtengine" width="400"/>|
 
-*Based on C++ performance. fCWT is the fastest CWT library in C++ and Matlab. In Python CCWT is faster for shorter signals and fCWT for longer signals. Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
+*Based on C++ performance. **fCWT is the fastest CWT library in C++, Python and Matlab!** Please see the benchmark section for more details. Raise an issue if you found a new/faster implementation. I will try to add it to benchmark! 
 
 Quickstart 
 ============
@@ -88,16 +88,16 @@ See the Installation section for more details about building fCWT from source fo
 Benchmark
 ========
 
-Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9 4.5 Ghz Boost, 16 GB 2400 MHz DDR4.
+Columns are formatted as X-Y, where X is signal length in samples and Y the number of frequencies. The benchmark has been performed on a MacBook Pro 2019 having a 2,3 GHz Intel Core i9 4.5 Ghz Boost, 16 GB 2400 MHz DDR4. See the 'Usage: Benchmark' section for more details about the C++ benchmark. See the [Benchmark Notebook](https://github.com/fastlib/fCWT/blob/main/benchmark.ipynb) for the fCWT Python benchmark.
 
 | Implementation        | 10k-300 | 10k-3000 | 100k-300 | 100k-3000 | Speedup factor |
 |-----------------------|---------|----------|----------|-----------|----------------|
 | fCWT (C++)            | 0.005s  | 0.04s    | 0.03s    | 0.32s     | -              |
-| fCWT (Python)         | 0.027s  | 0.23s    | 0.05s   | 0.49s     | -              | 
+| fCWT (Python)         | 0.011s  | 0.089s   | 0.074s   | 0.66s     | -              | 
 | fCWT (Matlab)         | 0.072s  | 0.44s    | 0.17s    | 1.55s     | -              |
 |                       |         |          |          |           |                |
 | [CCWT] (Python)       | 0.019s  | 0.11s    | 0.15s    | 3.40s     | 10.63x         |
-| [PyWavelets] (Python)   | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
+| [PyWavelets] (Python) | 0.10s   | 1.17s    | 1.06s    | 12.69s    | 34.29x         |
 | Matlab                | 0.75s   | 0.86s    | 1.06s    | 13.26s    | 35.85x         |
 | [SsqueezePy] (Python) | 0.04s   | 0.43s    | 1.16s    | 17.76s    | 48.00x         |
 | SciPy (Python)        | 0.19s   | 1.82s    | 2.11s    | 18.70s    | 50.54x         |
