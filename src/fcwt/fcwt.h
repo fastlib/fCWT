@@ -130,6 +130,7 @@ public:
         use_normalization(puse_normalization) {};
 
     void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
+    void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, string poptimizationflags);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales);
     void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, complex<float>* poutput, Scales *scales);
     void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);

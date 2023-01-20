@@ -353,6 +353,24 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         std::cout << "Optimization schemes for N: " << n << " have been calculated. Next time you use fCWT it will automatically choose the right optimization scheme based on number of threads and signal length." << std::endl;
     }
 }
+void FCWT::create_FFT_optimization_plan(int maxsize, string flags) {
+    int flag = 0;
+    
+    if(flags == "FFTW_MEASURE") {
+        flag = FFTW_MEASURE;
+    } else if(flags == "FFTW_PATIENT") {
+        flag = FFTW_PATIENT;
+    } else if(flags == "FFTW_EXHAUSTIVE") {
+        flag = FFTW_EXHAUSTIVE;
+    } else if(flags == "FFTW_ESTIMATE") {
+        flag = FFTW_ESTIMATE;
+    } else {
+        std::cerr << "Unknown flag: " << flags << std::endl;
+        return;
+    }
+    
+    create_FFT_optimization_plan(maxsize, flag);
+}
 
 void FCWT::load_FFT_optimization_plan() {
     const int nt = find2power(size);
