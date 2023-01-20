@@ -76,9 +76,6 @@ void mexFunction(int nlhs, mxArray *plhs[],
     mexWarnMsgIdAndTxt("fcwt:nothreads","Threads are currently not supported in Matlab. Using nthreads=1. See Issue #17 on Github.");
     mexPrintf("using N:%d",size,nthreads);
 
-
-    mwSize c0 = mxGetScalar(prhs[1]);
-
     Wavelet *wavelet;
     Morlet morl(1.0);
     wavelet = &morl;
