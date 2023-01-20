@@ -4,7 +4,7 @@ The fast Continuous Wavelet Transform (fCWT)
 ====================================
 ![Stable version](https://img.shields.io/badge/version-2.0.0-blue) ![PyPI version](https://badge.fury.io/py/fcwt.svg)
 
-The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++ and Python.
+The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library for very fast calculation of the CWT in C++, Matlab, and Python.
 
 **fCWT has been featured on the January 2022 cover of NATURE Computational Science**. In this article, fCWT is compared against eight competitor algorithms, tested on noise resistance and validated on synthetic electroencephalography and in vivo extracellular local field potential data.
 
@@ -27,7 +27,7 @@ Features
 - Real-time CWT for signals having sample frequencies of up to 200kHz
 - Applicable in many applications ranging from audio and speech to engine vibration analysis
 - Easy Python integration via pip
-- Coming soon: Easy MATLAB integration via MEX-files
+- Easy MATLAB integration via MEX-files
 
 |fCWT for real-time audio and speech analysis                    |fCWT for high-resolution in-vivo Neuropixel data analysis       |
 |:--------------------------------------------------------------:|:--------------------------------------------------------------:|
@@ -40,7 +40,7 @@ Features
 Quickstart 
 ============
 
-fCWT's implementation can be used to accelerate your C++, Python, and (Matlab) projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
+fCWT's implementation can be used to accelerate your C++, Python, and Matlab projects! Build the C++ library to achieve the highest efficiency or use the Matlab and Python packages to maximize integration possibilities. 
 
 Python
 ---
@@ -59,7 +59,7 @@ See this [Jupyter Notebook](https://github.com/fastlib/fCWT/blob/main/tutorial.i
 
 Matlab
 ---
-Build fCWT from source:
+Build MEX-files from source:
 ```
 $ git clone https://github.com/fastlib/fCWT.git
 $ cd fCWT
@@ -78,7 +78,7 @@ $ git clone https://github.com/fastlib/fCWT.git
 $ cd fCWT
 $ mkdir -p build
 $ cd build
-$ cmake ../
+$ cmake ../ [-DBUILD_BENCHMARK=ON|OFF]
 $ make 
 $ sudo make install
 ```
