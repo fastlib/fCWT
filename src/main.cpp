@@ -23,14 +23,14 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
     
-    int n = 100000; //signal length
+    int n = 1000; //signal length
     const int fs = 1000; //sampling frequency
     float twopi = 2.0*3.1415;
     
     //3000 frequencies spread logartihmically between 1 and 32 Hz
     const float f0 = 0.1;
     const float f1 = 20;
-    const int fn = 3000;
+    const int fn = 20;
 
     //Define number of threads for multithreaded use
     const int nthreads = 8;
