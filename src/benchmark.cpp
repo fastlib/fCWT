@@ -124,7 +124,7 @@ int main(int argc, char * argv[]) {
     const int f0 = 1;
     const int f1 = 32;
     const int noct = 6;
-    const int nvoi = 500;
+    const int nvoi = 50;
     const int fn = noct*nvoi;
     const int sigoutsize = size*fn*2;
     float c0 = 2*PI;
