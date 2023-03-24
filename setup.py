@@ -40,7 +40,7 @@ files = files + files2
 
 if "macosx" in sysconfig.get_platform() or "darwin" in sysconfig.get_platform():
     libraries = ['fftw3fmac','fftw3f_ompmac']
-    comp_args = ["-mavx","-O3"]
+    comp_args = ["-std=c++17","-mavx","-O3"]
     link_args = ["-lomp"]
 
 if "linux" in sysconfig.get_platform():
@@ -55,8 +55,8 @@ setup (ext_modules=[
                     'src/fcwt/fcwt.cpp',
                     'src/fcwt/fcwt_wrap.cxx'
                 ],
-                library_dirs = ['src/fcwt','src'],
-                include_dirs = ['src/fcwt','src',numpy_include],
+                library_dirs = ['src/fcwt','src','libs'],
+                include_dirs = ['src/fcwt','src','libs',numpy_include],
                 libraries = libraries,
                 extra_compile_args = comp_args,
                 extra_link_args = link_args
