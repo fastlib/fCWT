@@ -322,9 +322,9 @@ if(BUILD_MATLAB)
     
     matlab_add_mex(
         NAME fCWTmex
-        SRC src/MEX/fcwtmex.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtmex.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT
-        LINK_TO ${FFTW} ${FFTW_OMP}
+        LINK_TO ${FFTW} ${FFTW_OMP} ${fcwt_library_target}
         R2018a
     )
 
@@ -333,9 +333,9 @@ if(BUILD_MATLAB)
 
     matlab_add_mex(
         NAME fCWTmexplan
-        SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtplan.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
-        LINK_TO ${FFTW} ${FFTW_OMP}
+        LINK_TO ${FFTW} ${FFTW_OMP} ${fcwt_library_target}
         R2018a
     )
 
