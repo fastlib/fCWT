@@ -17,6 +17,9 @@ jobs:
           python-version: 3.11
           cache: "pip"
 
+      - name: Install dependencies
+        run: pip install -r ./tests/test_requirements.txt
+
       - name: Install fCWT
         run: python setup.py install
 
