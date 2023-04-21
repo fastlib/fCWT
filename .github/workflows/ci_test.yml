@@ -76,7 +76,7 @@ jobs:
             DEBIAN_FRONTEND: noninteractive
         run: |
           sudo -H apt-get update -y
-          sudo -H apt-get install -y python3-dev
+          sudo -H apt-get install -y libfftw3-3 python3-dev
           sudo -H pip3 install -r $GITHUB_WORKSPACE/tests/test_requirements.txt
       
       - name: Setup Cmake
@@ -88,7 +88,7 @@ jobs:
         run: |
           cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
           cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
-          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/libs:$LD_LIBRARY_PATH && $GITHUB_WORKSPACE/build/fCWT_example
+          $GITHUB_WORKSPACE/build/fCWT_example
 
 
 # ------------------------------------------------------------
