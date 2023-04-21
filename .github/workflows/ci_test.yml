@@ -58,8 +58,8 @@ jobs:
       
       - name: Compile Tests for MacOS arm64
         run: |
-          cmake -B $GITHUB_WORKSPACE/build_test -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
-          cmake --build $GITHUB_WORKSPACE/build_test --config Release --parallel 4
+          cmake -B $GITHUB_WORKSPACE/build -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
+          cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
           $GITHUB_WORKSPACE/build/fCWT_example
 
 # ------------------------------------------------------------
@@ -86,8 +86,8 @@ jobs:
 
       - name: Compile Tests for Linux
         run: |
-          cmake -B $GITHUB_WORKSPACE/build_test -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
-          cmake --build $GITHUB_WORKSPACE/build_test --config Release --parallel 4
+          cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
+          cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
           $GITHUB_WORKSPACE/build/fCWT_example
 
 
