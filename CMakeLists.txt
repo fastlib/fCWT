@@ -59,7 +59,7 @@ elseif(WIN32)
 endif()
 
 #set cmake linker flags
-link_libraries("-lm -Wl,-no_compact_unwind")
+link_libraries("-lm")
 
 link_directories(${PROJECT_SOURCE_DIR})
 

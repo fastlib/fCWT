@@ -23,14 +23,14 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
     
-    int n = 100000; //signal length
+    int n = 1000; //signal length
     const int fs = 1000; //sampling frequency
     float twopi = 2.0*3.1415;
     
     //3000 frequencies spread logartihmically between 1 and 32 Hz
     const float f0 = 0.1;
     const float f1 = 20;
-    const int fn = 3000;
+    const int fn = 200;
 
     //Define number of threads for multithreaded use
     const int nthreads = 8;
@@ -106,7 +106,7 @@ int main(int argc, char * argv[]) {
     chrono::duration<double> elapsed = finish - start;
     
     cout << "=== fCWT example ===" << endl;
-    cout << "Calculate CWT of a 100k sample sinusodial signal using a [" << f0 << "-" << f1 << "] Hz logarithmic frequency range and 3000 wavelets." << endl;
+    cout << "Calculate CWT of a 100k sample sinusodial signal using a [" << f0 << "-" << f1 << "] Hz linear frequency range and " << fn << " wavelets." << endl;
     cout << "====================" << endl;
     cout << "fCWT finished in " << elapsed.count() << "s" << endl;
 
