@@ -1,0 +1,25 @@
+name: CI Test
+
+on: [push, pull_request]
+
+jobs:
+
+  test-python:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          cache: "pip"
+
+      - name: Install fCWT
+        run: python setup.py install
+
+      - name: Run PyTest
+        run: pytest
+        working-directory: ./tests
