@@ -88,7 +88,7 @@ jobs:
         run: |
           cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
           cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
-          $GITHUB_WORKSPACE/build/fCWT_example
+          cd $GITHUB_WORKSPACE/build && fCWT_example
 
 
 # ------------------------------------------------------------
