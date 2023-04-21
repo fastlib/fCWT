@@ -17,9 +17,9 @@ jobs:
 
       - name: Compile Tests for Windows x86
         run: |
-          cmake -B %GITHUB_WORKSPACE%\build_test -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_VERSION=10.0.22000.0 -S %GITHUB_WORKSPACE%
-          cmake --build %GITHUB_WORKSPACE%\build_test --config Release --parallel 4
-          %GITHUB_WORKSPACE%/build/fCWT_example.exe
+          cmake -B %GITHUB_WORKSPACE%\build -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_VERSION=10.0.22000.0 -S %GITHUB_WORKSPACE%
+          cmake --build %GITHUB_WORKSPACE%\build --config Release --parallel 4
+          %GITHUB_WORKSPACE%/build/Release/fCWT_example.exe
         shell: cmd
 
 # ------------------------------------------------------------
