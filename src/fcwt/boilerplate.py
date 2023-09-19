@@ -55,7 +55,7 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
     # So we have fixed 10 ticks on the Y-axis; 10s occupies one X tick
 
     XTickInterval       = 10 # Seconds
-    YTickCount          = 10
+    YTickCount          = 9
     YLabelDecimalPlaces = 1
 
     ax2.set_xlabel('Time (s)')
