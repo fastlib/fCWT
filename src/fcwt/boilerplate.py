@@ -62,9 +62,10 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
     ax2.set_title('CWT')
 
 
-    frequencySpacing = int(fn / YTickCount)    # Find the step size for the number of Y ticks
+    frequencySpacing = int(fn / YTickCount)                # Find the step size for the number of Y ticks
 
-    yFrequencies = freqs[::frequencySpacing]   # Select by stepping along this length; clamp at the number we are looking for in case we get one extra.
+    yFrequencies = freqs[::frequencySpacing][0:YTickCount] # Select by stepping along this length; clamp at the number we are looking for in case we get one extra.
+
 
     xTickPositions = np.arange(0, input.size, fs * XTickInterval) 
     yTickPositions = np.arange(0, fn,         fn / YTickCount   )
