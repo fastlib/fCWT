@@ -49,13 +49,34 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
 
     #plot spectrogram
     ax2.imshow(np.abs(output),aspect='auto')
+    
 
     #set time on x-axis every 10s and frequency on y-axis for 10 ticks
+    # So we have fixed 10 ticks on the Y-axis; 10s occupies one X tick
+
+    XTickInterval       = 10 # Seconds
+    YTickCount          = 10
+
     ax2.set_xlabel('Time (s)')
     ax2.set_ylabel('Frequency (Hz)')
     ax2.set_title('CWT')
-    ax2.set_xticks(np.arange(0,input.size,fs*10),np.arange(0,input.size/fs,10))
-    ax2.set_yticks(np.arange(0,fn,fn/10),np.round(freqs[::int(fn/10)]))
+
+
+    frequencySpacing = int(fn / YTickCount)    # Find the step size for the number of Y ticks
+
+    yFrequencies = freqs[::frequencySpacing]   # Select by stepping along this length; clamp at the number we are looking for in case we get one extra.
+
+    xTickPositions = np.arange(0, input.size, fs * XTickInterval) 
+    yTickPositions = np.arange(0, fn,         fn / YTickCount   )
+    
+    xLabels  = np.arange(0, input.size/fs, XTickInterval)
+
+    # Round the Y labels to be whole numbers
+    yLabels  = np. round(yFrequencies) # Will be co-erced to a string for us later.
+
+    
+    ax2.set_xticks( ticks = xTickPositions, labels = xLabels )
+    ax2.set_yticks( ticks = yTickPositions, labels = yLabels )
 
 
     plt.show()
