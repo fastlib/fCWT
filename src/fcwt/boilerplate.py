@@ -56,6 +56,7 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
 
     XTickInterval       = 10 # Seconds
     YTickCount          = 10
+    YLabelDecimalPlaces = 1
 
     ax2.set_xlabel('Time (s)')
     ax2.set_ylabel('Frequency (Hz)')
@@ -72,8 +73,8 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
     
     xLabels  = np.arange(0, input.size/fs, XTickInterval)
 
-    # Round the Y labels to be whole numbers
-    yLabels  = np. round(yFrequencies) # Will be co-erced to a string for us later.
+    # Round the Y labels to be 1 d.p.
+    yLabels  = np. round(yFrequencies, decimals = YLabelDecimalPlaces) # Will be co-erced to a string for us later.
 
     
     ax2.set_xticks( ticks = xTickPositions, labels = xLabels )
