@@ -106,7 +106,7 @@ private:
 class Scales {
 public:
     FCWT_LIBRARY_API Scales(Wavelet *pwav, SCALETYPE st, int fs, float f0, float f1, int fn);
-
+    ~Scales();
     void FCWT_LIBRARY_API getScales(float *pfreqs, int pnf);
     void FCWT_LIBRARY_API getFrequencies(float *pfreqs, int pnf);
 
