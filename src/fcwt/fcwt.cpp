@@ -86,8 +86,8 @@ void Morlet::generate(float* real, float* imag, int size, float scale) {
 void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
     int w = getSupport(scale);
 
-    float *real = (float*)malloc(sizeof(float)*max(w*2+1,pn));
-    float *imag = (float*)malloc(sizeof(float)*max(w*2+1,pn));
+    float *real = (float*)fftwf_malloc(sizeof(float)*max(w*2+1,pn));
+    float *imag = (float*)fftwf_malloc(sizeof(float)*max(w*2+1,pn));
     for(int t=0; t < max(w*2+1,pn); t++) {
         real[t] = 0;
         imag[t] = 0;
@@ -99,9 +99,9 @@ void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
         pwav[t].real(real[t]);
         pwav[t].imag(imag[t]);
     }
-	
-	delete real;
-	delete imag;
+
+    fftwf_free(real);
+    fftwf_free(imag);
 };
 
 //==============================================================//
@@ -323,7 +323,7 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
     for(int i=11; i<=nt; i++) {
         int n = 1 << i;
         
-        float *dat = (float*)malloc(sizeof(float)*n);
+        float *dat = (float*)fftwf_malloc(sizeof(float)*n);
         fftwf_complex *O1 = fftwf_alloc_complex(n);
         fftwf_complex *out = fftwf_alloc_complex(n);
         
@@ -349,9 +349,11 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         
         fftwf_export_wisdom_to_filename(file_for);
         
-        free(dat);
+        fftwf_free(dat);
         fftwf_free(O1);
         fftwf_free(out);
+        fftwf_destroy_plan(p_for);
+        fftwf_destroy_plan(p_back);
         
         std::cout << "Optimization schemes for N: " << n << " have been calculated. Next time you use fCWT it will automatically choose the right optimization scheme based on number of threads and signal length." << std::endl;
     }
