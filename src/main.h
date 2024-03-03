@@ -41,10 +41,13 @@ limitations under the License.
     #define AVX
 #endif
 
-using namespace std;
 
 #define PI                    3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f
 
-#include "fcwt/fcwt.h"
+#include "fcwt/api.h"
+#include "fcwt/wavelet.h"
+#include "fcwt/morlet.h"
+#include "fcwt/scales.h"
+
 #include "rwave-bench.h"
 #include "wavelib-bench.h"

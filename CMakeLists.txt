@@ -45,7 +45,7 @@ endif()
 project(fCWT VERSION 2.0 DESCRIPTION "Highly optimized implementation of the Continuous Wavelet Transform")
 
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
@@ -53,9 +53,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 if(UNIX)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -mavx -O2")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -mavx -g3")
 elseif(WIN32)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX /O2 /W1")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20 /arch:AVX /O2 /W1")
 endif()
 
 #set cmake linker flags
@@ -64,27 +64,31 @@ link_libraries("-lm")
 link_directories(${PROJECT_SOURCE_DIR})
 
 set(libraryheaders 
-    "./src/fcwt/fcwt.h"
+    "src/fcwt/api.h"
+    "src/fcwt/morlet.h"
+    "src/fcwt/wavelet.h"
+    "src/fcwt/scales.h"
 )
 set(implementationheaders 
     "./src/main.h" 
 ) 
 set(benchmarkheaders
     "./src/benchmark.h"
-    "./src/fcwt/fcwt.h"
+    "src/fcwt/api.h"
     "./src/rwave-bench.h" 
     "./src/wavelib-bench.h"
 )
 
 set(librarysources 
-    "./src/fcwt/fcwt.cpp"
+    "src/fcwt/api.cpp"
+    "src/fcwt/scales.cpp"
+    "src/fcwt/morlet.cpp"
 )
 set(implementationsources 
-    "./src/main.cpp" 
+    "./src/main.cpp"
 )
 set(benchmarksources
     "./src/benchmark.cpp"
-    "./src/fcwt/fcwt.cpp"
     "./src/rwave-bench.cpp"
     "./src/wavelib-bench.cpp"
 )
@@ -326,7 +330,7 @@ if(BUILD_MATLAB)
     
     matlab_add_mex(
         NAME fCWTmex
-        SRC src/MEX/fcwtmex.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtmex.cpp src/fcwt/api.h src/fcwt/api.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT
         LINK_TO ${FFTW} ${FFTW_OMP}
         R2018a
@@ -337,7 +341,7 @@ if(BUILD_MATLAB)
 
     matlab_add_mex(
         NAME fCWTmexplan
-        SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtplan.cpp src/fcwt/api.h src/fcwt/api.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
         LINK_TO ${FFTW} ${FFTW_OMP}
         R2018a
