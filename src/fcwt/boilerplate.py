@@ -1,6 +1,5 @@
 from .fcwt import Morlet, Scales, FCWT, FCWT_LINSCALES, FCWT_LOGSCALES, FCWT_LINFREQS
 import numpy as np
-import matplotlib.pyplot as plt
 
 def cwt(input, fs, f0, f1, fn, nthreads=1, scaling="lin", fast=False, norm=True):
 
@@ -34,6 +33,7 @@ def cwt(input, fs, f0, f1, fn, nthreads=1, scaling="lin", fast=False, norm=True)
     return freqs, output
 
 def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, norm=True):
+    import matplotlib.pyplot as plt
     
     f0 = f0 if f0 else 1/(input.size/fs)
     f1 = f1 if f1 else fs/2
