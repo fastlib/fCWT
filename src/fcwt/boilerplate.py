@@ -55,7 +55,7 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
     ax2.set_ylabel('Frequency (Hz)')
     ax2.set_title('CWT')
     ax2.set_xticks(np.arange(0,input.size,fs*10),np.arange(0,input.size/fs,10))
-    ax2.set_yticks(np.arange(0,fn,fn/10),np.round(freqs[::int(fn/10)]))
+    ax2.set_yticks(np.arange(0,fn,int(fn/10)),np.round(freqs[::int(fn/10)]))
 
 
     plt.show()
