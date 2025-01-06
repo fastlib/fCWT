@@ -33,18 +33,8 @@ limitations under the License.
   #define FCWT_LIBRARY_API
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <cstring>
-#include <stdbool.h>
-#include <vector>
-#include <chrono>
-#include <cassert>
-#include <math.h>
 #include <complex>
-
 #include <iostream>
-#include <sstream>
 
 #ifndef SINGLE_THREAD
     #include <omp.h>

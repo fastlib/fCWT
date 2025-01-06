@@ -5,11 +5,8 @@ setup.py file for SWIG
 """
 
 from setuptools import Extension, setup, find_packages
-import distutils.command.build
 import sysconfig
 import numpy
-import os
-import shutil
 
 
 # Obtain the numpy include directory.  This logic works across numpy versions.
@@ -55,7 +52,7 @@ setup (ext_modules=[
                     'src/fcwt/fcwt.cpp',
                     'src/fcwt/fcwt_wrap.cxx'
                 ],
-                library_dirs = ['src/fcwt','src'],
+                library_dirs = ['libs'],
                 include_dirs = ['src/fcwt','src',numpy_include],
                 libraries = libraries,
                 extra_compile_args = comp_args,

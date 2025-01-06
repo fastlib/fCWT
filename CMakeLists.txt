@@ -145,14 +145,10 @@ if (OPENMP_FOUND)
         target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
         target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
 
-        target_include_directories(fCWT_example PUBLIC ${OpenMP_INCLUDES})
-        target_link_directories(fCWT_example PUBLIC ${OpenMP_LIBRARIES})
-        target_link_libraries(fCWT_example PUBLIC "-lomp")
+        target_link_libraries(fCWT_example PUBLIC ${fcwt_library_target})
 
         if(BUILD_BENCHMARK)
-            target_include_directories(fCWT_benchmark PUBLIC ${OpenMP_INCLUDES})
-            target_link_directories(fCWT_benchmark PUBLIC ${OpenMP_LIBRARIES})
-            target_link_libraries(fCWT_benchmark PUBLIC "-lomp")
+            target_link_libraries(fCWT_benchmark PUBLIC ${fcwt_library_target})
         endif()
     endif()
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -326,9 +322,9 @@ if(BUILD_MATLAB)
     
     matlab_add_mex(
         NAME fCWTmex
-        SRC src/MEX/fcwtmex.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtmex.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT
-        LINK_TO ${FFTW} ${FFTW_OMP}
+        LINK_TO ${FFTW} ${FFTW_OMP} ${fcwt_library_target}
         R2018a
     )
 
@@ -337,9 +333,9 @@ if(BUILD_MATLAB)
 
     matlab_add_mex(
         NAME fCWTmexplan
-        SRC src/MEX/fcwtplan.cpp src/fcwt/fcwt.h src/fcwt/fcwt.cpp
+        SRC src/MEX/fcwtplan.cpp
         OUTPUT_NAME ${FCWT_MATLAB_DIR}/fCWT_create_plan
-        LINK_TO ${FFTW} ${FFTW_OMP}
+        LINK_TO ${FFTW} ${FFTW_OMP} ${fcwt_library_target}
         R2018a
     )
 
