@@ -1,0 +1,117 @@
+name: CI Test
+
+on: [push, pull_request]
+
+jobs:
+
+# ------------------------------------------------------------
+  test-windows:
+    runs-on: windows-2022
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Compile Tests for Windows x86
+        run: |
+          cmake -B %GITHUB_WORKSPACE%\build -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_VERSION=10.0.22000.0 -S %GITHUB_WORKSPACE%
+          cmake --build %GITHUB_WORKSPACE%\build --config Release --parallel 4
+          %GITHUB_WORKSPACE%/build/Release/fCWT_example.exe
+        shell: cmd
+
+# ------------------------------------------------------------
+
+  test-macos:
+    runs-on: macos-11
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.21'
+      
+      - name: Compile Tests for MacOS x86_64
+        run: |
+          cmake -B $GITHUB_WORKSPACE/build -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
+          cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
+          $GITHUB_WORKSPACE/build/fCWT_example
+        
+# ------------------------------------------------------------
+
+  test-macos-arm:
+    runs-on: macos-12
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.21'
+      
+      - name: Compile Tests for MacOS arm64
+        run: |
+          cmake -B $GITHUB_WORKSPACE/build -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
+          cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
+          $GITHUB_WORKSPACE/build/fCWT_example
+
+# ------------------------------------------------------------
+
+  test-linux:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        env:
+            DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -H apt-get update -y
+          sudo -H apt-get install -y libfftw3-3 python3-dev
+          sudo -H pip3 install -r $GITHUB_WORKSPACE/tests/test_requirements.txt
+      
+      - name: Setup Cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.21'
+
+      - name: Compile Tests for Linux
+        run: |
+          cmake -B $GITHUB_WORKSPACE/build -DCMAKE_BUILD_TYPE=Release -S $GITHUB_WORKSPACE
+          cmake --build $GITHUB_WORKSPACE/build --config Release --parallel 4
+          $GITHUB_WORKSPACE/build/fCWT_example
+
+
+# ------------------------------------------------------------
+
+  test-python:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r ./tests/test_requirements.txt
+
+      - name: Install fCWT
+        run: python setup.py install
+
+      - name: Run PyTest
+        run: pytest
+        working-directory: ./tests
