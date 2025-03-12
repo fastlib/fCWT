@@ -85,7 +85,8 @@ def plot(input, fs, f0=0, f1=0, fn=0, nthreads=1, scaling="lin", fast=False, nor
     fn = fn if fn else 100
     freqs, output = cwt(input, fs, f0, f1, fn, nthreads=nthreads, scaling=scaling, fast=fast, norm=norm)
 
-    _plot(input, output, fs, f0, f1, fn)
+    _plot(input,freqs, output, fs, f0, f1, fn) 
+    #added "freqs" to call _plot properly
 
     
     
