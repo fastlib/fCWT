@@ -1,6 +1,5 @@
 from .fcwt import Morlet, Scales, FCWT, FCWT_LINSCALES, FCWT_LOGSCALES, FCWT_LINFREQS
 import numpy as np
-import matplotlib.pyplot as plt
 
 def cwt(input, fs, f0, f1, fn, nthreads=1, scaling="lin", fast=False, norm=True):
 
@@ -34,6 +33,7 @@ def cwt(input, fs, f0, f1, fn, nthreads=1, scaling="lin", fast=False, norm=True)
     return freqs, output
 
 def _plot(input, freqs, output, fs, f0, f1, fn):
+    import matplotlib.pyplot as plt
 
     #create two subplots
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
