@@ -35,6 +35,8 @@ limitations under the License.
 
 #include <complex>
 #include <iostream>
+#include <cstring>
+#include <cassert>
 
 #ifndef SINGLE_THREAD
     #include <omp.h>
