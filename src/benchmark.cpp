@@ -30,7 +30,11 @@ static void show_usage(std::string name)
               << "\t-fcwt\t\t Run fCWT benchmark for N samples and K threads\n"
               << "\t-fcwtoptimize\t Calculate fCWT optimization plan for N samples, K threads using specified optimization method\n"
               << "\t-rwave\t\t Run Rwave benchmark for N samples\n"
+#ifdef FCWT_WITH_WAVELIB
               << "\t-wavelib\t Run Wavelib benchmark for N samples\n"
+#else
+              << "\t-wavelib\t Run Wavelib benchmark for N samples (not available in this build)\n"
+#endif
     << "Optimization methods (when method= -fcwtoptimize):\n"
     << "\t-estimate\t Fast but low performance\n"
     << "\t-measure\t Medium fast and medium performance performance\n"
@@ -51,10 +55,12 @@ static void show_stats(chrono::duration<double> *times, int runs)
     mean = total/runs;
     total = 0.0;
 
-    for(int i=0; i<runs; i++) {
-        total += (times[i].count() - mean)*(times[i].count() - mean);
+    if(runs > 1) {
+        for(int i=0; i<runs; i++) {
+            total += (times[i].count() - mean)*(times[i].count() - mean);
+        }
+        std = sqrt(total/(runs-1));
     }
-    std = sqrt(total/(runs-1));
 
     cout << " | elapsed avg time: " << mean << "s (sd: " << std << "s) on " << runs << " runs\n";
     
@@ -63,6 +69,24 @@ static void show_stats(chrono::duration<double> *times, int runs)
         cout << times[i].count() << ",";
     }
     cout << "]\n";
+}
+
+static int get_env_int(const char *name, int default_value, int min_value)
+{
+    const char *value = getenv(name);
+    if(value == nullptr || value[0] == '\0') {
+        return default_value;
+    }
+
+    try {
+        int parsed = stoi(value);
+        if(parsed >= min_value) {
+            return parsed;
+        }
+    } catch(...) {
+    }
+
+    return default_value;
 }
 
 
@@ -129,7 +153,8 @@ int main(int argc, char * argv[]) {
     const int sigoutsize = size*fn*2;
     float c0 = 2*PI;
     float hz = 1;
-    int runs = 5;
+    int runs = get_env_int("FCWT_BENCHMARK_RUNS", 5, 1);
+    int sleep_us = get_env_int("FCWT_BENCHMARK_SLEEP_US", 10000000, 0);
     
     float *sig1 = (float*)malloc(sizeof(float)*size);
     float *sig2 = (float*)malloc(sizeof(float)*size);
@@ -229,7 +254,7 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+            this_thread::sleep_for(chrono::microseconds(sleep_us));
 
         }
         cout << endl;
@@ -255,7 +280,7 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+            this_thread::sleep_for(chrono::microseconds(sleep_us));
         }
         cout << endl;
         cout << algorithm << " on sig2 with length N: " << size;
@@ -280,7 +305,7 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+            this_thread::sleep_for(chrono::microseconds(sleep_us));
         }
         cout << endl;
         cout << algorithm << " on sig3 with length N: " << size;
@@ -301,13 +326,14 @@ int main(int argc, char * argv[]) {
             finish = chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+            this_thread::sleep_for(chrono::microseconds(sleep_us));
         }
         cout << endl;
         cout << algorithm << " on sig1 with length N: " << size;
         show_stats(times,runs);
     }
     if(algorithm=="-wavelib") {
+#ifdef FCWT_WITH_WAVELIB
         
         //WAVELIB
         cout << "=========== BENCHMARKING WAVELIB ============" << endl;
@@ -321,11 +347,15 @@ int main(int argc, char * argv[]) {
             times[k] = finish - start;
             cout << times[k].count();
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+            this_thread::sleep_for(chrono::microseconds(sleep_us));
         }
         cout << endl;
         cout << algorithm << " on sig1 with length N: " << size;
         show_stats(times,runs);
+#else
+        cerr << "ERROR: Wavelib benchmark is not available in this build." << endl;
+        return 1;
+#endif
     }
     
     delete sig1;

@@ -1,0 +1,137 @@
+name: Benchmark C++ Library
+
+on:
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "Number of samples"
+        required: true
+        default: "100000"
+      threads:
+        description: "Number of threads"
+        required: true
+        default: "8"
+      optimization:
+        description: "FFTW optimization mode"
+        required: true
+        default: "estimate"
+        type: choice
+        options:
+          - estimate
+          - measure
+          - patient
+          - exhaustive
+      install-wavelib:
+        description: "Build and install Wavelib before running optional comparison"
+        required: true
+        default: false
+        type: boolean
+      run-rwave:
+        description: "Run RWave comparison benchmark"
+        required: true
+        default: false
+        type: boolean
+      smoke:
+        description: "Use one run and no sleep for a quick benchmark smoke test"
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  benchmark:
+    name: Benchmark C++ Library
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libomp-dev
+
+      - name: Build and install Wavelib
+        if: inputs.install-wavelib
+        run: |
+          git clone https://github.com/rafat/wavelib.git /tmp/wavelib
+          cmake -S /tmp/wavelib -B /tmp/wavelib/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/wavelib/build --config Release
+          sudo cmake --install /tmp/wavelib/build --prefix /usr/local
+
+      - name: Configure benchmark build
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_BENCHMARK=ON
+
+      - name: Build benchmark
+        run: cmake --build build --config Release --target fCWT_benchmark
+
+      - name: Capture benchmark system specs
+        run: |
+          {
+            echo "Benchmark system specs"
+            echo "======================"
+            echo "Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "Runner: $RUNNER_NAME"
+            echo "Runner OS: $RUNNER_OS"
+            echo "Runner arch: $RUNNER_ARCH"
+            echo
+            echo "OS release"
+            echo "----------"
+            cat /etc/os-release
+            echo
+            echo "Kernel"
+            echo "------"
+            uname -a
+            echo
+            echo "CPU"
+            echo "---"
+            lscpu
+            echo
+            echo "Memory"
+            echo "------"
+            free -h
+            echo
+            echo "Compiler"
+            echo "--------"
+            c++ --version
+            echo
+            echo "CMake"
+            echo "-----"
+            cmake --version
+          } > benchmark-spec.txt
+
+      - name: Run FFTW optimization
+        if: ${{ !inputs.smoke }}
+        run: ./build/fCWT_benchmark -fcwtoptimize "${{ inputs.samples }}" "${{ inputs.threads }}" "-${{ inputs.optimization }}"
+
+      - name: Run fCWT benchmark
+        run: |
+          if [ "${{ inputs.smoke }}" = "true" ]; then
+            export FCWT_BENCHMARK_RUNS=1
+            export FCWT_BENCHMARK_SLEEP_US=0
+          fi
+          ./build/fCWT_benchmark -fcwt "${{ inputs.samples }}" "${{ inputs.threads }}" | tee benchmark-fcwt.txt
+
+      - name: Run RWave benchmark
+        if: inputs.run-rwave
+        run: |
+          if [ "${{ inputs.smoke }}" = "true" ]; then
+            export FCWT_BENCHMARK_RUNS=1
+            export FCWT_BENCHMARK_SLEEP_US=0
+          fi
+          ./build/fCWT_benchmark -rwave "${{ inputs.samples }}" "${{ inputs.threads }}" | tee benchmark-rwave.txt
+
+      - name: Run Wavelib benchmark
+        if: inputs.install-wavelib
+        run: |
+          if [ "${{ inputs.smoke }}" = "true" ]; then
+            export FCWT_BENCHMARK_RUNS=1
+            export FCWT_BENCHMARK_SLEEP_US=0
+          fi
+          ./build/fCWT_benchmark -wavelib "${{ inputs.samples }}" "${{ inputs.threads }}" | tee benchmark-wavelib.txt
+
+      - name: Upload benchmark output
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-results
+          path: benchmark-*.txt
+          retention-days: 3

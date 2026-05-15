@@ -9,6 +9,8 @@
 
 #include "benchmark.h"
 
+#include <cstring>
+
 namespace rwave {
     
     int find2power(int n)

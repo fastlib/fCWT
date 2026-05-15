@@ -1,5 +1,7 @@
 #include "benchmark.h"
 
+#include <wavelib.h>
+
 void cwt(double *input, int nvoi, int noct, int size) {
     //Wavelib Rafat
     char *wave = (char*)"morlet";

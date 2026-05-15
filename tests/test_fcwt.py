@@ -1,8 +1,6 @@
 from fcwt import *
 import os
 import numpy as np
-import matplotlib.pyplot as plt
-#import timeit
 
 def cwt2(x,fs,f0,f1,fn):
     
@@ -239,13 +237,13 @@ def test_plan():
 
     morl = Morlet(2.0)
     fcwt = FCWT(morl, 1, True, False)
-    fcwt.create_FFT_optimization_plan(2048,0)
+    fcwt.create_FFT_optimization_plan(2048,'FFTW_MEASURE')
     fname = "n2048_t1.wis"
 
     assert os.path.isfile(fname) 
 
     fcwt = FCWT(morl, 8, True, False)
-    fcwt.create_FFT_optimization_plan(2048,0)
+    fcwt.create_FFT_optimization_plan(2048,'FFTW_MEASURE')
     fname = "n2048_t8.wis"
 
     assert os.path.isfile(fname) 

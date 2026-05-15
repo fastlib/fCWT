@@ -1,0 +1,90 @@
+name: Build C++ Library
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-cpp:
+    name: Build C++ Library
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025-vs2026, macos-26-intel, macos-26]
+        build-shared-libs: ['ON', 'OFF']
+        include:
+          - os: ubuntu-24.04
+            cmake-flags: "-DCMAKE_BUILD_TYPE=Release"
+          - os: windows-2025-vs2026
+            cmake-flags: "-DCMAKE_BUILD_TYPE=Release"
+          - os: macos-26-intel
+            cmake-flags: "-DCMAKE_BUILD_TYPE=Release"
+          - os: macos-26
+            cmake-flags: "-DCMAKE_BUILD_TYPE=Release"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libomp-dev
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake libomp
+
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        shell: powershell
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Configure CMake (Unix)
+        if: runner.os != 'Windows'
+        run: cmake -B build ${{ matrix.cmake-flags }} -DBUILD_SHARED_LIBS=${{ matrix.build-shared-libs }} -DBUILD_BENCHMARK=OFF
+
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        run: cmake -B build -A x64 ${{ matrix.cmake-flags }} -DBUILD_SHARED_LIBS=${{ matrix.build-shared-libs }} -DBUILD_BENCHMARK=OFF
+        shell: cmd
+
+      - name: Build C++ Library
+        run: cmake --build build --config Release
+
+      - name: Upload C++ build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpp-build-${{ matrix.os }}-shared-${{ matrix.build-shared-libs }}
+          path: build/
+          retention-days: 3
+
+      - name: Check example executable exists
+        if: runner.os != 'Windows'
+        run: |
+          if [ -f build/fCWT_example ]; then
+            echo "C++ example built successfully"
+            ./build/fCWT_example
+          else
+            echo "Warning: fCWT_example not found"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Check example executable exists (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          if (Test-Path "build\Release\fCWT_example.exe") {
+            Write-Host "C++ example built successfully"
+            & "build\Release\fCWT_example.exe"
+          } else {
+            Write-Warning "fCWT_example.exe not found"
+            exit 1
+          }
+        shell: powershell

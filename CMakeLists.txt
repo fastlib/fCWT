@@ -9,6 +9,7 @@ option(BUILD_SHARED_LIBS "Build shared library?" ON)
 option(USE_OWN_FFTW "Use own FFTW installation?" OFF)
 option(BUILD_BENCHMARK "Build Benchmark?" OFF)
 option(BUILD_MATLAB "Build Matlab mex?" OFF)
+option(BUILD_PYTHON "Build Python extension?" OFF)
 
 if(NOT DEFINED CMAKE_BUILD_TYPE OR NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING
@@ -44,6 +45,13 @@ endif()
 # set the project name
 project(fCWT VERSION 2.0 DESCRIPTION "Highly optimized implementation of the Continuous Wavelet Transform")
 
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" FCWT_SYSTEM_PROCESSOR)
+if(FCWT_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|i[3-6]86)$")
+    set(FCWT_ENABLE_AVX ON)
+else()
+    set(FCWT_ENABLE_AVX OFF)
+endif()
+
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -53,9 +61,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 if(UNIX)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -mavx -O2")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -O2")
+    if(FCWT_ENABLE_AVX)
+	    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
+    endif()
 elseif(WIN32)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /arch:AVX /O2 /W1")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /O2 /W1")
+    if(FCWT_ENABLE_AVX)
+	    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
+    endif()
 endif()
 
 #set cmake linker flags
@@ -86,7 +100,6 @@ set(benchmarksources
     "./src/benchmark.cpp"
     "./src/fcwt/fcwt.cpp"
     "./src/rwave-bench.cpp"
-    "./src/wavelib-bench.cpp"
 )
 
 set(headers ${libraryheaders} ${implementationheaders})
@@ -124,8 +137,14 @@ link_directories("${PROJECT_SOURCE_DIR}/libs")
 link_directories("/usr/local/lib")
 
 if(APPLE)
-    set(OpenMP_INCLUDES "/usr/local/opt/libomp/include")
-    set(OpenMP_LIBRARIES "/usr/local/opt/libomp/lib")
+    if(FCWT_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
+        set(FCWT_HOMEBREW_PREFIX "/opt/homebrew")
+    else()
+        set(FCWT_HOMEBREW_PREFIX "/usr/local")
+    endif()
+
+    set(OpenMP_INCLUDES "${FCWT_HOMEBREW_PREFIX}/opt/libomp/include")
+    set(OpenMP_LIBRARIES "${FCWT_HOMEBREW_PREFIX}/opt/libomp/lib")
     set(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp")
     set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp")
     set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5")
@@ -143,7 +162,7 @@ if (OPENMP_FOUND)
     if(APPLE)
         target_include_directories(${fcwt_library_target} PUBLIC ${OpenMP_INCLUDES})
         target_link_directories(${fcwt_library_target} PUBLIC ${OpenMP_LIBRARIES})
-        target_link_libraries(${fcwt_library_target} PUBLIC "-lomp")
+        target_link_libraries(${fcwt_library_target} PUBLIC "${OpenMP_LIBRARIES}/libomp.dylib")
 
         target_link_libraries(fCWT_example PUBLIC ${fcwt_library_target})
 
@@ -255,7 +274,6 @@ if(BUILD_BENCHMARK)
     find_library (
         WAVELIB
         NAMES wavelib libwavelib # what to look for
-        REQUIRED
     )
 endif()
 
@@ -292,11 +310,36 @@ if(UNIX)
 	endif()
 endif()
 
+if(UNIX AND NOT APPLE AND NOT USE_OWN_FFTW)
+    set_target_properties(${fcwt_library_target} fCWT_example
+        PROPERTIES
+        BUILD_RPATH "$ORIGIN"
+    )
+
+    if(BUILD_BENCHMARK)
+        set_target_properties(fCWT_benchmark
+            PROPERTIES
+            BUILD_RPATH "$ORIGIN"
+        )
+    endif()
+
+    add_custom_command(TARGET ${fcwt_library_target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${PROJECT_SOURCE_DIR}/libs/libfftw3fl.so"
+            "${PROJECT_BINARY_DIR}/libfftw3f.so.3"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${PROJECT_SOURCE_DIR}/libs/libfftw3f_ompl.so"
+            "${PROJECT_BINARY_DIR}/libfftw3f_omp.so.3"
+    )
+endif()
+
 if(BUILD_BENCHMARK)
-    if (NOT WAVELIB)
-        message(SEND_ERROR "Did not find wavelib. Please note that you need to install wavelib yourself. See README.md for more information.")
-    else()
+    if(WAVELIB)
+        target_sources(fCWT_benchmark PRIVATE "./src/wavelib-bench.cpp")
+        target_compile_definitions(fCWT_benchmark PRIVATE FCWT_WITH_WAVELIB)
         target_link_libraries(fCWT_benchmark PRIVATE ${WAVELIB})
+    else()
+        message(WARNING "Did not find wavelib. Building fCWT_benchmark without -wavelib support.")
     endif()
 endif()
 
@@ -305,9 +348,76 @@ if(WIN32)
 	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Debug)
 	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.dll" DESTINATION ${PROJECT_BINARY_DIR}/Release)
 	file(COPY "${PROJECT_SOURCE_DIR}/libs/fftw3f.lib" DESTINATION ${PROJECT_BINARY_DIR}/Release)
-    if(BUILD_BENCHMARK)
+    if(BUILD_BENCHMARK AND WAVELIB)
 	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
 	    file(COPY ${WAVELIB} DESTINATION ${PROJECT_BINARY_DIR}/Release)
+    endif()
+endif()
+
+if(BUILD_PYTHON)
+    find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
+
+    if(NOT FCWT_PYTHON_NUMPY_INCLUDE_DIR)
+        execute_process(
+            COMMAND "${Python3_EXECUTABLE}" -c "import numpy; print(numpy.get_include())"
+            OUTPUT_VARIABLE FCWT_PYTHON_NUMPY_INCLUDE_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    endif()
+
+    add_library(_fcwt MODULE
+        src/fcwt/fcwt.cpp
+        src/fcwt/fcwt_wrap.cxx
+    )
+
+    target_include_directories(_fcwt PRIVATE
+        "${PROJECT_SOURCE_DIR}/src/fcwt"
+        "${PROJECT_SOURCE_DIR}/src"
+        "${PROJECT_SOURCE_DIR}/libs"
+        "${Python3_INCLUDE_DIRS}"
+        "${FCWT_PYTHON_NUMPY_INCLUDE_DIR}"
+    )
+
+    target_link_libraries(_fcwt PRIVATE ${FFTW})
+    target_link_libraries(_fcwt PRIVATE Python3::Module)
+
+    if(UNIX)
+        target_link_libraries(_fcwt PRIVATE ${FFTW_OMP})
+    endif()
+
+    if(APPLE)
+        target_include_directories(_fcwt PRIVATE ${OpenMP_INCLUDES})
+        target_link_directories(_fcwt PRIVATE ${OpenMP_LIBRARIES})
+        target_link_libraries(_fcwt PRIVATE "${OpenMP_LIBRARIES}/libomp.dylib")
+        set_target_properties(_fcwt PROPERTIES
+            LINK_FLAGS "-undefined dynamic_lookup"
+            BUILD_RPATH "${OpenMP_LIBRARIES}"
+        )
+    elseif(UNIX)
+        target_link_libraries(_fcwt PRIVATE OpenMP::OpenMP_CXX)
+        set_target_properties(_fcwt PROPERTIES
+            BUILD_RPATH "$ORIGIN"
+        )
+    elseif(WIN32)
+        target_link_libraries(_fcwt PRIVATE OpenMP::OpenMP_CXX)
+    endif()
+
+    set_target_properties(_fcwt PROPERTIES
+        PREFIX ""
+    )
+
+    if(FCWT_PYTHON_EXTENSION_SUFFIX)
+        set_target_properties(_fcwt PROPERTIES
+            SUFFIX "${FCWT_PYTHON_EXTENSION_SUFFIX}"
+        )
+    endif()
+
+    if(FCWT_PYTHON_OUTPUT_DIR)
+        set_target_properties(_fcwt PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "${FCWT_PYTHON_OUTPUT_DIR}"
+            RUNTIME_OUTPUT_DIRECTORY "${FCWT_PYTHON_OUTPUT_DIR}"
+            ARCHIVE_OUTPUT_DIRECTORY "${FCWT_PYTHON_OUTPUT_DIR}"
+        )
     endif()
 endif()
 

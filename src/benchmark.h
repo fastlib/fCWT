@@ -42,9 +42,9 @@ limitations under the License.
 #endif
 
 using namespace std;
-#include <wavelib.h>
 
 #include "fcwt/fcwt.h"
 #include "rwave-bench.h"
+#ifdef FCWT_WITH_WAVELIB
 #include "wavelib-bench.h"
-
+#endif
